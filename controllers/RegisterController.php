@@ -3,7 +3,7 @@
 session_start();
 
 require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/RegisterModel.php';
+require __DIR__ . '/../models/UserModel.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php?page=recordlist');
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorList['username'] = 'Username already exists';
         } else {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $newUserId = register($connectDatabase, $userName, $hashedPassword);
+            $newUserId = createUser($connectDatabase, $userName, $hashedPassword);
 
             session_regenerate_id(true);
             $_SESSION['user_id'] = $newUserId;

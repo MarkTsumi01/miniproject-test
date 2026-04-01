@@ -3,7 +3,7 @@
 session_start();
 
 require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/LoginModel.php';
+require __DIR__ . '/../models/UserModel.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php?page=recordlist');
