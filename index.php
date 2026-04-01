@@ -12,7 +12,7 @@ switch ($page) {
         
         break;
     case 'recordlist':
-        require 'views/recordlist.php';
+        require __DIR__ . '/controllers/RecordListController.php';
         
         break;
     default:

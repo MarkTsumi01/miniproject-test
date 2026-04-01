@@ -1,58 +1,3 @@
-<?php
-
-session_start();
-
-require __DIR__ . '/../models/Database.php';
-
-if (!isset($_SESSION['user_id'])) {
-    session_write_close();
-    header('Location: index.php?page=login');
-    exit();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_record_id'])) {
-    $deleteRecordId = $_POST['delete_record_id'];
-    $deleteStmt = $connectDatabase->prepare('DELETE FROM records WHERE id = ?');
-    $deleteStmt->bind_param('i', $deleteRecordId);
-    $deleteStmt->execute();
-    $deleteStmt->close();
-    header('Location: index.php?page=recordlist');
-    exit();
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-    $_SESSION = [];
-    $cookieParams = session_get_cookie_params();
-    setcookie(
-        session_name(),
-        '',
-        time() - 3600,
-        $cookieParams['path'],
-        $cookieParams['domain'],
-        $cookieParams['secure'],
-        $cookieParams['httponly']
-    );
-    session_destroy();
-    header('Location: index.php?page=login');
-    exit();
-}
-
-$selectRecordsStmt = $connectDatabase->prepare('
-    SELECT records.id, records.name, COUNT(bands.id) AS band_count
-    FROM records
-    LEFT JOIN bands ON bands.record_id = records.id
-    GROUP BY records.id, records.name
-    ORDER BY records.name ASC
-');
-
-$selectRecordsStmt->execute();
-$recordsResult = $selectRecordsStmt->get_result();
-$selectRecordsStmt->close();
-
-session_write_close();
-
-?>
-
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -86,7 +31,7 @@ session_write_close();
                     <a href='editrecord.php?record_id=<?php echo $record['id']; ?>'>Edit</a>
                     <form method='post' style='display:inline;'>
                         <input type='hidden' name='delete_record_id' value='<?php echo $record['id']; ?>'>
-                        <input type='submit' value='Delete'
+                        <input type='submit' value='Delete'>
                     </form>
                 </td>
             </tr>
