@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errorList)) {
         $user = findUserByUsername($connectDatabase, $userName);
-
-        if ($user === false || !password_verify($password, $user['password'])) {
+        
+        if (!isset($user) || !passwordVerify($password, $user['password'])) {
             $errorList['credentials'] = 'Invalid username or password';
         } else {
             session_regenerate_id(true);
