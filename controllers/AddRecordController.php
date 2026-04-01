@@ -2,11 +2,12 @@
 
 session_start();
 
-include 'connectdatabase.php';
+require __DIR__ . '/../models/Database.php';
+require __DIR__ . '/../models/RecordModel.php';
 
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
-    header('Location: login.php');
+    header('Location: index.php?page=login');
     exit();
 }
 
@@ -20,22 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     if (empty($errorList)) {
-       $checkRecordName = $connectDatabase->prepare('SELECT id FROM records WHERE name = ?');
-       $checkRecordName->bind_param('s', $recordName);
-       $checkRecordName->execute();
-       $checkRecordName->store_result();
        
-        if ($checkRecordName->num_rows > 0) {
+        $isFounded = checkRecordByName($connectDatabase, $recordName);
+       
+        if ($isFounded) {
            $errorList['record_name'] = 'This name already exists';
        } else {
-           $addRecord = $connectDatabase->prepare('INSERT INTO records (name) VALUES (?)');
-           $addRecord->bind_param('s', $recordName);
-           $addRecord->execute();
+           addRecordById($connectDatabase, $recordName);
            
-           header('Location: recordlist_test.php');
+           header('Location: index.php?page=recordlist');
            exit();
        }
    }
-   
-   $checkRecordName->close();
 }
+
+require __DIR__ . '/../views/addrecord.php';

@@ -15,6 +15,10 @@ switch ($page) {
         require __DIR__ . '/controllers/RecordListController.php';
         
         break;
+    case 'addrecord':
+        require __DIR__ . '/controllers/AddRecordController.php';
+            
+        break;
     default:
         http_response_code(404);
         echo '404 Not Found';
