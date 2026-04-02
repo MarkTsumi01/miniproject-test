@@ -4,19 +4,19 @@ $page = $_GET['page'] ?? 'login';
 
 switch ($page) {
     case 'login':
-        require __DIR__ . '/controllers/LoginController.php';
+        require __DIR__ . '/app/controllers/LoginController.php';
         
         break;
     case 'register':
-        require __DIR__ . '/controllers/RegisterController.php';
+        require __DIR__ . '/app/controllers/RegisterController.php';
         
         break;
     case 'recordlist':
-        require __DIR__ . '/controllers/RecordListController.php';
+        require __DIR__ . '/app/controllers/RecordListController.php';
         
         break;
     case 'addrecord':
-        require __DIR__ . '/controllers/AddRecordController.php';
+        require __DIR__ . '/app/controllers/AddRecordController.php';
             
         break;
     default:

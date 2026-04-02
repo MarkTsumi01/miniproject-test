@@ -8,7 +8,7 @@
 <body>
     <h1>Record List</h1>
 
-    <a href='addrecord.php'>Add Record</a>
+    <a href='index.php?page=addrecord.php'>Add Record</a>
 
     <table border='1'>
         <thead>
@@ -28,7 +28,7 @@
                 </td>
                 <td><?php echo $record['band_count']; ?></td>
                 <td>
-                    <a href='editrecord.php?record_id=<?php echo $record['id']; ?>'>Edit</a>
+                    <a href='index.php?page=editrecord&record_id==<?php echo $record['id']; ?>'>Edit</a>
                     <form method='post' style='display:inline;'>
                         <input type='hidden' name='delete_record_id' value='<?php echo $record['id']; ?>'>
                         <input type='submit' value='Delete'>

@@ -14,8 +14,8 @@ $errorList = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (isset($_POST['register'])) {
-        header('Location: index.php?page=register');
+    if (isset($_POST['login'])) {
+        header('Location: index.php?page=login');
         exit();
     }
 
@@ -25,18 +25,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($userName)) {
         $errorList['username'] = 'Username is required';
     }
+    
     if (empty($password)) {
         $errorList['password'] = 'Password is required';
     }
 
     if (empty($errorList)) {
-        $user = findUserByUsername($connectDatabase, $userName);
-        
-        if (!isset($user) || !passwordVerify($password, $user['password'])) {
-            $errorList['credentials'] = 'Invalid username or password';
+        if (existsByUsername($connectDatabase, $userName)) {
+            $errorList['username'] = 'Username already exists';
         } else {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $newUserId = createUser($connectDatabase, $userName, $hashedPassword);
+
             session_regenerate_id(true);
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_id'] = $newUserId;
             $_SESSION['username'] = $userName;
             session_write_close();
             header('Location: index.php?page=recordlist');
@@ -45,4 +47,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require __DIR__ . '/../views/login.php';
+require __DIR__ . '/../views/register.php';
