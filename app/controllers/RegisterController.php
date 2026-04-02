@@ -13,7 +13,6 @@ if (isset($_SESSION['user_id'])) {
 $errorList = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (isset($_POST['login'])) {
         header('Location: index.php?page=login');
         exit();

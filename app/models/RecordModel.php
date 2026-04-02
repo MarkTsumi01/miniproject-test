@@ -1,8 +1,8 @@
 <?php
 
-function getAllRecords(mysqli $database)
+function getAllRecords(mysqli $connectDatabase)
 {
-    $statement = $database->prepare('
+    $statement = $connectDatabase->prepare('
         SELECT records.id, records.name, COUNT(bands.id) AS band_count
         FROM records
         LEFT JOIN bands ON bands.record_id = records.id
@@ -17,9 +17,9 @@ function getAllRecords(mysqli $database)
     return $recordResult;
 }
 
-function checkRecordByName(mysqli $database, string $recordName): bool 
+function checkRecord(mysqli $connectDatabase, string $recordName): bool 
 {
-    $statement = $database->prepare('
+    $statement = $connectDatabase->prepare('
         SELECT id 
         FROM records 
         WHERE name = ?
@@ -30,14 +30,15 @@ function checkRecordByName(mysqli $database, string $recordName): bool
     $statement->store_result();
     
     $isFounded = ($statement->num_rows > 0) ? true : false;
+    
     $statement->close();
     
     return $isFounded;
 }
 
-function addRecordById(mysqli $database, string $recordName): void
+function addRecord(mysqli $connectDatabase, string $recordName): void
 {
-    $statement = $database->prepare('
+    $statement = $connectDatabase->prepare('
         INSERT INTO records (name) 
         VALUES (?)
     ');
@@ -47,9 +48,23 @@ function addRecordById(mysqli $database, string $recordName): void
     $statement->close();
 }
 
-function deleteByRecordId(mysqli $database,int $recordId): void
+function editRecord(mysqli $connectDatabase, string $recordName, int $recordId): void 
 {
-    $statement = $database->prepare('
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $statement = $connectDatabase->prepare('
+        UPDATE records
+        SET name = ?
+        WHERE id = ?
+    ');
+    
+    $statement->bind_param('si', $recordName, $recordId);
+    $statement->execute();
+    $statement->close();
+}
+
+function deleteRecord(mysqli $connectDatabase,int $recordId): void
+{
+    $statement = $connectDatabase->prepare('
         DELETE 
         FROM records 
         WHERE id = ?

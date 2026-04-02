@@ -15,24 +15,24 @@ $errorList = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $recordName = $_POST['record_name'];
+    $recordId = (int) $_GET['record_id'];
     
     if (empty($recordName)) {
         $errorList['record_name'] = 'Record name is required';
     }
     
     if (empty($errorList)) {
-       
         $isFounded = checkRecord($connectDatabase, $recordName);
        
         if ($isFounded) {
            $errorList['record_name'] = 'This name already exists';
        } else {
-           addRecord($connectDatabase, $recordName);
-           
+           editRecord($connectDatabase, $recordName, $recordId);
+        
            header('Location: index.php?page=recordlist');
            exit();
        }
    }
 }
 
-require __DIR__ . '/../views/addrecord.php';
+require __DIR__ . '/../views/editrecord.php';
