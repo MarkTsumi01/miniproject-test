@@ -23,7 +23,7 @@
             <?php while ($record = $recordsResult->fetch_assoc()): ?>
             <tr>
                 <td>
-                    <a href="bandlist.php?record_id=<?php echo $record['id']; ?>">
+                    <a href="index.php?page=bandlist&record_id=<?php echo $record['id']; ?>">
                         <?php echo htmlspecialchars($record['name']); ?>
                     </a>
                 </td>

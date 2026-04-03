@@ -11,6 +11,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$recordId = (int) $_GET['record_id'];
+$record = getRecord($connectDatabase, $recordId);
+
 $errorList = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -22,6 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     if (empty($errorList)) {
+        if ($recordName === $record['name']) {
+            editRecord($connectDatabase, $recordName, $recordId);
+            
+            header('Location: index.php?page=recordlist');
+            exit();
+        }
+        
         $isFounded = checkRecord($connectDatabase, $recordName);
        
         if ($isFounded) {

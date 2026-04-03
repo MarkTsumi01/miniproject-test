@@ -3,11 +3,20 @@
 function getAllRecords(mysqli $connectDatabase)
 {
     $statement = $connectDatabase->prepare('
-        SELECT records.id, records.name, COUNT(bands.id) AS band_count
-        FROM records
-        LEFT JOIN bands ON bands.record_id = records.id
-        GROUP BY records.id, records.name
-        ORDER BY records.name ASC
+        SELECT 
+            records.id, 
+            records.name, 
+            COUNT(bands.id) AS band_count
+        FROM 
+            records
+        LEFT JOIN 
+            bands 
+            ON bands.record_id = records.id
+        GROUP BY 
+            records.id, 
+            records.name
+        ORDER BY 
+            records.name ASC
     ');
     
     $statement->execute();
@@ -17,12 +26,36 @@ function getAllRecords(mysqli $connectDatabase)
     return $recordResult;
 }
 
+function getRecord(mysqli $connectDatabase, int $recordId): array
+{
+    $statement = $connectDatabase->prepare('
+        SELECT 
+            id, 
+            name 
+        FROM 
+            records 
+        WHERE 
+            id = ?
+    ');
+    
+    $statement->bind_param('i', $recordId);
+    $statement->execute();
+    
+    $record = $statement->get_result()->fetch_assoc();
+    $statement->close();
+    
+    return $record;
+}
+
 function checkRecord(mysqli $connectDatabase, string $recordName): bool 
 {
     $statement = $connectDatabase->prepare('
-        SELECT id 
-        FROM records 
-        WHERE name = ?
+        SELECT 
+            id 
+        FROM 
+            records 
+        WHERE 
+            name = ?
     ');
     
     $statement->bind_param('s', $recordName);
@@ -39,8 +72,10 @@ function checkRecord(mysqli $connectDatabase, string $recordName): bool
 function addRecord(mysqli $connectDatabase, string $recordName): void
 {
     $statement = $connectDatabase->prepare('
-        INSERT INTO records (name) 
-        VALUES (?)
+        INSERT INTO 
+            records (name) 
+        VALUES 
+            (?)
     ');
     
     $statement->bind_param('s', $recordName);
@@ -52,9 +87,12 @@ function editRecord(mysqli $connectDatabase, string $recordName, int $recordId):
 {
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     $statement = $connectDatabase->prepare('
-        UPDATE records
-        SET name = ?
-        WHERE id = ?
+        UPDATE 
+            records
+        SET 
+            name = ?
+        WHERE 
+            d = ?
     ');
     
     $statement->bind_param('si', $recordName, $recordId);
@@ -66,8 +104,10 @@ function deleteRecord(mysqli $connectDatabase,int $recordId): void
 {
     $statement = $connectDatabase->prepare('
         DELETE 
-        FROM records 
-        WHERE id = ?
+        FROM 
+            records 
+        WHERE 
+            id = ?
     ');
     
     $statement->bind_param('i', $recordId);

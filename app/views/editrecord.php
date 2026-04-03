@@ -18,7 +18,9 @@
     
     <form method="post">
         <label for="record_name">Record Name:</label>
-        <input type="text" id="record_name" name="record_name" value="<?php echo isset($_POST['record_name']) ? htmlspecialchars($_POST['record_name']) : ''; ?>">
+        <input type="text" id="record_name" name="record_name" value="<?php echo isset($_POST['record_name']) 
+                ? htmlspecialchars($_POST['record_name']) 
+                : htmlspecialchars($record['name']);?>">
         <?php if (!empty($errorList['record_name'])) {
                 echo "<p>" . htmlspecialchars($errorList['record_name']) . "</p>";
         } ?>

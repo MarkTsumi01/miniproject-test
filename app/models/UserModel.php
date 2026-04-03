@@ -3,8 +3,10 @@
 function createUser(mysqli $database, string $userName, string $hashedPassword): int
 {
     $statement = $database->prepare('
-        INSERT INTO users (username, password) 
-        VALUES (?, ?)
+        INSERT INTO 
+            users (username, password) 
+        VALUES 
+            (?, ?)
     ');
     
     $statement->bind_param('ss', $userName, $hashedPassword);
@@ -19,9 +21,12 @@ function createUser(mysqli $database, string $userName, string $hashedPassword):
 function existsByUsername(mysqli $database, string $userName): bool
 {
     $statement = $database->prepare('
-        SELECT id 
-        FROM users 
-        WHERE username = ?
+        SELECT 
+            id 
+        FROM 
+            users 
+        WHERE 
+            username = ?
     ');
     
     $statement->bind_param('s', $userName);
@@ -37,9 +42,12 @@ function existsByUsername(mysqli $database, string $userName): bool
 function findUserByUsername(mysqli $database, string $userName): ?array 
 {
     $statement = $database->prepare('
-        SELECT id, password 
-        FROM users 
-        WHERE username = ?
+        SELECT 
+            id, password 
+        FROM 
+            users 
+        WHERE 
+            username = ?
     ');
     
     if (!$statement) {

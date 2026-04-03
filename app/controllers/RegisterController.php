@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $userName = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $userName = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
     if (empty($userName)) {
         $errorList['username'] = 'Username is required';

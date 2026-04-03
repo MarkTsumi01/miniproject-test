@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     //     $cookieParams['httponly']
     // );
     
-    session_start();
+    // session_start();
     session_unset(); 
     session_destroy();
     setcookie(session_name(), '', time() - 3600, '/');
