@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorList['username'] = 'Username is required';
     }
     
+    if (stripos($userName, ' ')) {
+        $errorList['username'] = 'Username must not contain space';
+    }
+    
     if (empty($password)) {
         $errorList['password'] = 'Password is required';
     }

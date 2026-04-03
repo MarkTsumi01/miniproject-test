@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_band'])) {
     exit();
 }
 
-// $recordId = $_GET['record_id'];
+$recordId = (int) $_GET['record_id'];
 
-$bandResult = getAllBands($connectDatabase);
+$bandResult = getAllBands($connectDatabase, $recordId);
 
 require __DIR__ . '/../views/bandlist.php';
