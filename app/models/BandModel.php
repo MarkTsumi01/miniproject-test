@@ -1,6 +1,6 @@
 <?php
 
-function getAllBands(mysqli $connectDatabase, $recordId)
+function getAllBands(mysqli $connectDatabase)
 {
     $statement = $connectDatabase->prepare('
         SELECT 
@@ -12,8 +12,6 @@ function getAllBands(mysqli $connectDatabase, $recordId)
         LEFT JOIN 
             albums 
             ON albums.band_id = bands.id
-        WHERE 
-            bands.record_id = ?
         GROUP BY 
             bands.id, 
             bands.name
@@ -21,7 +19,7 @@ function getAllBands(mysqli $connectDatabase, $recordId)
             bands.name ASC
     ');
     
-    $statement->bind_param('s', $recordId);
+    // $statement->bind_param('s', $recordId);
     $statement->execute();
     $bandResult = $statement->get_result();
     $statement->close();
@@ -47,19 +45,19 @@ function checkBand(mysqli $connectDatabase, string $bandName): bool
     
     $statement->close();
     
-    return $isFounded;
+    return $isFound;
 }
 
-function addBand(mysqli $connectDatabase, string $bandName): void
+function addBand(mysqli $connectDatabase, string $bandName, int $recordId): void
 {
     $statement = $connectDatabase->prepare('
         INSERT INTO 
-            bands (name) 
+            bands (name, record_id) 
         VALUES 
-            (?)
+            (?, ?)
     ');
     
-    $statement->bind_param('s', $bandName);
+    $statement->bind_param('si', $bandName, $recordId);
     $statement->execute();
     $statement->close();
 }

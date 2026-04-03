@@ -31,6 +31,7 @@ $routes = [
     'addrecord' => '/app/controllers/AddRecordController.php',
     'editrecord' => '/app/controllers/EditRecordController.php',
     'bandlist' => '/app/controllers/BandListController.php',
+    'addband' => '/app/controllers/AddBandController.php'
 ];
 
 $page = $_GET['page'] ?? 'login';

@@ -11,8 +11,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$recordId = $_GET['record_id'];
+// $recordId = $_GET['record_id'];
 
-$bandResult = getAllBands($connectDatabase, $recordId);
+$bandResult = getAllBands($connectDatabase);
 
 require __DIR__ . '/../views/bandlist.php';

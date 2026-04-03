@@ -47,6 +47,29 @@ function getRecord(mysqli $connectDatabase, int $recordId): array
     return $record;
 }
 
+function getRecordId(mysqli $connectDatabase, string $recordName)
+{
+    $statement = $connectDatabase->prepare('
+        SELECT 
+            id
+        FROM
+            records
+        WHERE
+            name = ?
+    ');
+    
+    $statement->bind_param('s', $recordName);
+    $statement->execute();
+    
+    $statement->bind_result($recordId);
+    $statement->fetch();
+    $statement->close();
+    
+    $result = ['id' => $recordId];
+    
+    return $result;
+}
+
 function checkRecord(mysqli $connectDatabase, string $recordName): bool 
 {
     $statement = $connectDatabase->prepare('

@@ -13,6 +13,10 @@
     </script>
 </head>
 <body>
+    <ul style="list-style-type:none; display:flex; gap:20px;">
+        <li><a href="index.php?page=recordlist">Record List</a></li>
+        <li><a href="index.php?page=bandlist">Band List</a></li>
+    </ul>
     
     <h1>Edit Record</h1>
     
