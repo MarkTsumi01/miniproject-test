@@ -61,3 +61,18 @@ function addBand(mysqli $connectDatabase, string $bandName, int $recordId): void
     $statement->execute();
     $statement->close();
 }
+
+function deleteBand(mysqli $connectDatabase, int $bandId)
+{
+    $statement = $connectDatabase->prepare('
+        DELETE
+        FROM
+            bands
+        WHERE
+            id = ?
+    ');
+    
+    $statement->bind_param('i', $bandId);
+    $statement->execute();
+    $statement->close();
+}

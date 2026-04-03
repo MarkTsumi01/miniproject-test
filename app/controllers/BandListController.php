@@ -11,6 +11,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_band'])) {
+    $bandId = $_POST['delete_band'];
+    
+    deleteBand($connectDatabase, $bandId);
+    
+    header('Location: index.php?page=bandlist');
+    exit();
+}
+
 // $recordId = $_GET['record_id'];
 
 $bandResult = getAllBands($connectDatabase);

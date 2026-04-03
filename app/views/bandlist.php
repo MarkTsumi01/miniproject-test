@@ -45,7 +45,7 @@
                     <form method="post" style="display:inline;">
                         <input 
                             type="hidden" 
-                            name="delete_record_id" 
+                            name="delete_band" 
                             value="<?php echo $band['id']; ?>">
                         <input 
                             type="submit" 
