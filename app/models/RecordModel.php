@@ -115,7 +115,7 @@ function editRecord(mysqli $connectDatabase, string $recordName, int $recordId):
         SET 
             name = ?
         WHERE 
-            d = ?
+            id = ?
     ');
     
     $statement->bind_param('si', $recordName, $recordId);
