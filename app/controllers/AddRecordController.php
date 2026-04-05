@@ -7,8 +7,8 @@ require __DIR__ . '/../models/RecordModel.php';
 
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
-    
     header('Location: index.php?page=login');
+    
     exit();
 }
 
@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
            $errorList['record_name'] = 'This name already exists';
        } else {
            addRecord($connectDatabase, $recordName);
-           
            header('Location: index.php?page=recordlist');
+           
            exit();
        }
    }

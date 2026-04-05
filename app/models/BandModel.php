@@ -1,6 +1,6 @@
 <?php
 
-function getAllBands(mysqli $connectDatabase)
+function getAllBands(mysqli $connectDatabase, int $recordId)
 {
     $statement = $connectDatabase->prepare('
         SELECT 
@@ -12,6 +12,8 @@ function getAllBands(mysqli $connectDatabase)
         LEFT JOIN 
             albums 
             ON albums.band_id = bands.id
+        WHERE
+            bands.record_id = ?
         GROUP BY 
             bands.id, 
             bands.name
@@ -19,7 +21,7 @@ function getAllBands(mysqli $connectDatabase)
             bands.name ASC
     ');
     
-    // $statement->bind_param('s', $recordId);
+    $statement->bind_param('i', $recordId);
     $statement->execute();
     $bandResult = $statement->get_result();
     $statement->close();
