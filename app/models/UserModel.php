@@ -43,11 +43,10 @@ function findUserByUsername(mysqli $database, string $userName): ?array
 {
     $statement = $database->prepare('
         SELECT 
-            id, password 
-        FROM 
-            users 
-        WHERE 
-            username = ?
+            id, 
+            password 
+        FROM users 
+        WHERE username = ? 
     ');
     
     if (!$statement) {

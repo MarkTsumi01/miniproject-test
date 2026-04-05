@@ -7,20 +7,21 @@ require __DIR__ . '/../models/UserModel.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php?page=recordlist');
+    
     exit();
 }
 
 $errorList = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (isset($_POST['register'])) {
         header('Location: index.php?page=register');
+        
         exit();
     }
 
     $userName = trim($_POST['username'] ?? '');
-    $password = trim($_POST['password'] ?? '');
+    $password = ($_POST['password'] ?? '');
 
     if (empty($userName)) {
         $errorList['username'] = 'Username is required';
@@ -39,13 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
         if ($user === null || !passwordVerify($password, $user['password'])) {
             $errorList['credentials'] = 'Invalid username or password';
-        } else {
-            session_regenerate_id(true);
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $userName;
-            session_write_close();
-    
+        } else {    
             header('Location: index.php?page=recordlist');
+            
             exit();
         }
     }

@@ -8,8 +8,8 @@ require __DIR__ . '/../models/RecordModel.php';
 
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
-    
     header('Location: index.php?page=login');
+    
     exit();
 }
 
@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $recordName = $_POST['record_name'];
     
     $recordData = getRecordId($connectDatabase, $recordName);
-    
     $recordId = $recordData['id'];
     
     if (empty($bandName)) {
@@ -35,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errorList['band_name'] = 'This band name is already exists';
         } else {
             addBand($connectDatabase, $bandName, $recordId);
-            
             header('Location: index.php?page=bandlist');
+            
             exit();
         }
     }
