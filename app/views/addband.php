@@ -13,12 +13,6 @@
     </script>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="index.php?page=recordlist">Record List</a></li>
-        </ul>
-    </nav>
-
     <main>
         <h1>Add Band</h1>
 

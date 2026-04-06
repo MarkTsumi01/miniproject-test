@@ -1,6 +1,6 @@
 <?php
 
-function insertUser(mysqli $database, string $userName, string $hashedPassword): int
+function addUser(mysqli $database, string $userName, string $hashedPassword): int
 {
     $insertUser = '
         INSERT INTO users 

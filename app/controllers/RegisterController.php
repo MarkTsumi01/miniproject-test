@@ -40,13 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorList['username'] = 'Username already exists';
         } else {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $newUserId = insertUser($connectDatabase, $userName, $hashedPassword);
-    
+            $newUserId = addUser($connectDatabase, $userName, $hashedPassword);
             $_SESSION['user_id'] = $newUserId;
             $_SESSION['username'] = $userName;
-            
             session_write_close();
-            
             header('Location: index.php?page=recordlist');
             
             exit();

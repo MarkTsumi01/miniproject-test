@@ -34,7 +34,7 @@ if ($isPostRequest) {
             $errorList['band_name'] = 'This band name already exists';
         } else {
             insertBand($connectDatabase, $bandName, $recordId);
-            header('Location: index.php?page=bandlist');
+            header('Location: index.php?page=bandlist&record_id=' . $recordId);
 
             exit();
         }

@@ -86,9 +86,9 @@ function insertRecord(mysqli $connectDatabase, string $recordName): void
 {
     $insertRecord = '
         INSERT INTO records 
-            name
+           (name)
         VALUES 
-            ?
+            (?)
     ';
 
     $statement = $connectDatabase->prepare($insertRecord);

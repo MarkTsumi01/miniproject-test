@@ -27,6 +27,25 @@ function getBandsByRecordId(mysqli $connectDatabase, int $recordId)
     return $result;
 }
 
+function getBandByBandId(mysqli $connectDatabase, int $bandId): array
+{
+    $selectBandById = '
+        SELECT 
+            id, 
+            name 
+        FROM bands
+        WHERE id = ?
+    ';
+
+    $statement = $connectDatabase->prepare($selectBandById);
+    $statement->bind_param('i', $bandId);
+    $statement->execute();
+    $band = $statement->get_result()->fetch_assoc();
+    $statement->close();
+
+    return $band;
+}
+
 function isBandExists(mysqli $connectDatabase, string $bandName): bool
 {
     $selectBandIdByName = '
@@ -60,6 +79,23 @@ function insertBand(mysqli $connectDatabase, string $bandName, int $recordId): v
     $statement->execute();
     $statement->close();
 }
+
+function updateBand(mysqli $connectDatabsae, $bandName, $bandId): void
+{
+    $updateBandWithBandId = '
+        UPDATE bands
+        SET
+            name = ?
+        WHERE id = ?
+    ';
+    
+    $statement = $connectDatabsae->prepare($updateBandWithBandId);
+    $statement->bind_param('si', $bandName, $bandId);
+    $statement->execute();
+    $statement->close();
+}
+
+
 
 function deleteBand(mysqli $connectDatabase, int $bandId): void
 {

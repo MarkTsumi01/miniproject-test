@@ -22,7 +22,7 @@
     <main>
         <h1>Band List</h1>
 
-        <a href="index.php?page=addband">Add Band</a>
+        <a href="index.php?page=addband&record_id=<?= (int) $recordId ?>">Add Band</a>
 
         <table border="1">
             <thead>
@@ -42,7 +42,7 @@
                         </td>
                         <td><?= (int) $band['album_count'] ?></td>
                         <td>
-                            <a href="index.php?page=editband&band_id=<?= (int) $band['id'] ?>">Edit</a>
+                            <a href="index.php?page=editband&band_id=<?= (int) $band['id'] ?>&record_id=<?= $recordId ?>">Edit</a>
 
                             <form method="post" style="display:inline;">
                                 <input

@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$recordId = (int) $_GET['record_id'];
 $isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
 $isDeleteBand = isset($_POST['delete_band']);
 
@@ -19,12 +20,11 @@ if ($isPostRequest && $isDeleteBand) {
     $bandId = (int) $_POST['delete_band'];
 
     deleteBand($connectDatabase, $bandId);
-    header('Location: index.php?page=bandlist');
+    header('Location: index.php?page=bandlist&record_id=' . $recordId);
 
     exit();
 }
 
-$recordId = (int) $_GET['record_id'];
 $bandResult = getBandsByRecordId($connectDatabase, $recordId);
 
 session_write_close();
