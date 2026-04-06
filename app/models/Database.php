@@ -5,13 +5,9 @@ $userName = 'root';
 $password = 'root';
 $databaseName = 'mini_test';
 
-$connectDatabase = mysqli_connect(
-    $serverName, 
-    $userName,
-    $password,
-    $databaseName
-);
+$connectDatabase = new mysqli($serverName, $userName, $password, $databaseName);
 
-if (!$connectDatabase) {
-    die('Connection failed: ' . mysqli_connect_error());
+if ($connectDatabase->connect_error) {
+    error_log('Connection failed: ' . $connectDatabase->connect_error);
+    die('Something went wrong. Please try again later.');
 }

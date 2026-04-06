@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $userName = trim($_POST['username'] ?? '');
-    $password = ($_POST['password'] ?? '');
+    $password = $_POST['password'] ?? '';
 
     if (empty($userName)) {
         $errorList['username'] = 'Username is required';
@@ -36,16 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errorList)) {
-        if (existsByUsername($connectDatabase, $userName)) {
+        if (isUserExistsByUsername($connectDatabase, $userName)) {
             $errorList['username'] = 'Username already exists';
         } else {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $newUserId = createUser($connectDatabase, $userName, $hashedPassword);
-
-            session_regenerate_id(true);
+            $newUserId = insertUser($connectDatabase, $userName, $hashedPassword);
+    
             $_SESSION['user_id'] = $newUserId;
             $_SESSION['username'] = $userName;
+            
             session_write_close();
+            
             header('Location: index.php?page=recordlist');
             
             exit();

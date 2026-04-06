@@ -1,3 +1,13 @@
+<?php
+
+if (!defined('APP_RUNNING')) {
+    http_response_code(403);
+    
+    die('Direct access is not allowed');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <script>
-        window.addEventListener('pageshow', function (event) {
+        window.addEventListener('pageshow', function(event) {
             if (event.persisted) {
                 window.location.reload();
             }
@@ -13,37 +23,37 @@
     </script>
 </head>
 <body>
+    <main>
+        <h1>Register</h1>
 
-    <h1>Register</h1>
+        <form method="post">
+            <div>
+                <label for="username">Username:</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+                <?php if (!empty($errorList['username'])): ?>
+                    <p><?= htmlspecialchars($errorList['username']) ?></p>
+                <?php endif; ?>
+            </div>
 
-    <form method="post">
-        <label for="username">Username:</label>
-        <input 
-            type="text" 
-            id="username" 
-            name="username" 
-            value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>">
-        <br>
-        <?php if (!empty($errorList['username'])) {
-            echo '<p>' . htmlspecialchars($errorList['username']) . '</p>';
-        } ?>
+            <div>
+                <label for="password">Password:</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password">
+                <?php if (!empty($errorList['password'])): ?>
+                    <p><?= htmlspecialchars($errorList['password']) ?></p>
+                <?php endif; ?>
+            </div>
 
-        <label for="password">Password:</label>
-        <input 
-            type="password" 
-            id="password" 
-            name="password">
-        <br>
-        <?php if (!empty($errorList["password"])) {
-            echo '<p>' . htmlspecialchars($errorList["password"]) . '</p>';
-        } ?>
+            <button type="submit" name="submit">Register</button>
+        </form>
 
-        <input type="submit" name="submit" value="Register">
-    </form>
-
-    <form method="post">
-        <input type="submit" name="login" value="Login">
-    </form>
-
+        <a href="index.php?page=login">Login</a>
+    </main>
 </body>
 </html>

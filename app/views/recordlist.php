@@ -3,58 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
     <title>Record List</title>
 </head>
 <body>
-    <ul style="list-style-type:none; display:flex; gap:20px;">
-        <li><a href="index.php?page=recordlist">Record List</a></li>
-        <li><a href="index.php?page=bandlist">Band List</a></li>
-    </ul>
-    
-    <h1>Record List</h1>
+    <nav>
+        <ul>
+            <li><a href="index.php?page=recordlist">Record List</a></li>
+        </ul>
+    </nav>
 
-    <a href="index.php?page=addrecord">Add Record</a>
+    <main>
+        <h1>Record List</h1>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Record Name</th>
-                <th>Bands</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($record = $recordsResult->fetch_assoc()): ?>
-            <tr>
-                <td>
-                    <a href="index.php?page=bandlist&record_id=<?php echo $record['id']; ?>">
-                        <?php echo htmlspecialchars($record['name']); ?>
-                    </a>
-                </td>
-                <td><?php echo $record['band_count']; ?></td>
-                <td>
-                    <a href="index.php?page=editrecord&record_id=<?php echo $record['id']; ?>">Edit</a>
-                    
-                    <form method="post" style="display:inline;">
-                        <input 
-                            type="hidden" 
-                            name="delete_record_id" 
-                            value="<?php echo $record['id']; ?>">
-                        <input 
-                            type="submit" 
-                            value="Delete">
-                    </form>
-                    
-                </td>
-            </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
+        <a href="index.php?page=addrecord">Add Record</a>
 
-    <form method="post">
-        <input type="submit" value="Logout" name="logout">
-    </form>
-    
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Record Name</th>
+                    <th>Bands</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($recordsResult as $record): ?>
+                    <tr>
+                        <td>
+                            <a href="index.php?page=bandlist&record_id=<?= (int) $record['id'] ?>">
+                                <?= htmlspecialchars($record['name']) ?>
+                            </a>
+                        </td>
+                        <td><?= (int) $record['band_count'] ?></td>
+                        <td>
+                            <a href="index.php?page=editrecord&record_id=<?= (int) $record['id'] ?>">Edit</a>
+
+                            <form method="post" style="display:inline;">
+                                <input
+                                    type="hidden"
+                                    name="delete_record_id"
+                                    value="<?= (int) $record['id'] ?>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <form method="post">
+            <button type="submit" name="logout">Logout</button>
+        </form>
+    </main>
 </body>
 </html>
