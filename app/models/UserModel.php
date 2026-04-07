@@ -1,45 +1,6 @@
 <?php
 
-function addUser(mysqli $database, string $userName, string $hashedPassword): int
-{
-    $insertUser = '
-        INSERT INTO users 
-            username, 
-            password
-        VALUES 
-            ?, 
-            ?
-    ';
-
-    $statement = $database->prepare($insertUser);
-    $statement->bind_param('ss', $userName, $hashedPassword);
-    $statement->execute();
-    $newUserId = $database->insert_id;
-    $statement->close();
-
-    return $newUserId;
-}
-
-function isUserExistsByUsername(mysqli $connectDatabase, string $userName): bool
-{
-    $selectUserIdByUsername = '
-        SELECT 
-            id 
-        FROM users 
-        WHERE username = ?
-    ';
-
-    $statement = $connectDatabase->prepare($selectUserIdByUsername);
-    $statement->bind_param('s', $userName);
-    $statement->execute();
-    $statement->store_result();
-    $isExists = $statement->num_rows > 0;
-    $statement->close();
-
-    return $isExists;
-}
-
-function findUserByUsername(mysqli $database, string $userName): ?array
+function getUserByUserName(mysqli $connectDatabase, string $userName)
 {
     $selectUserByUsername = '
         SELECT 
@@ -48,12 +9,30 @@ function findUserByUsername(mysqli $database, string $userName): ?array
         FROM users 
         WHERE username = ?
     ';
-
-    $statement = $database->prepare($selectUserByUsername);
+    
+    $statement = $connectDatabase->prepare($selectUserByUsername);
     $statement->bind_param('s', $userName);
     $statement->execute();
     $result = $statement->get_result()->fetch_assoc();
     $statement->close();
-
+    
     return $result;
+}
+
+function addUser(mysqli $connectDatabase, string $userName, string $hashedPassword): int
+{
+    $insertUser = '
+        INSERT INTO users 
+            (username, password)
+        VALUES 
+            (?, ?)
+    ';
+    
+    $statement = $connectDatabase->prepare($insertUser);
+    $statement->bind_param('ss', $userName, $hashedPassword);
+    $statement->execute();
+    $newUserId = $connectDatabase->insert_id;
+    $statement->close();
+    
+    return $newUserId;
 }

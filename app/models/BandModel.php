@@ -65,7 +65,7 @@ function isBandExists(mysqli $connectDatabase, string $bandName): bool
     return $isFound;
 }
 
-function insertBand(mysqli $connectDatabase, string $bandName, int $recordId): void
+function addBand(mysqli $connectDatabase, string $bandName, int $recordId): void
 {
     $insertBandWithRecordId = '
         INSERT INTO 
@@ -84,8 +84,7 @@ function updateBand(mysqli $connectDatabsae, $bandName, $bandId): void
 {
     $updateBandWithBandId = '
         UPDATE bands
-        SET
-            name = ?
+            SET name = ?
         WHERE id = ?
     ';
     

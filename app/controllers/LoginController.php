@@ -1,12 +1,13 @@
 <?php
 
 session_start();
+
 require __DIR__ . '/../models/Database.php';
 require __DIR__ . '/../models/UserModel.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php?page=recordlist');
-
+    
     exit();
 }
 
@@ -18,7 +19,7 @@ $isRegister = isset($_POST['register']);
 if ($isPostRequest) {
     if ($isRegister) {
         header('Location: index.php?page=register');
-
+        
         exit();
     }
 
@@ -29,7 +30,7 @@ if ($isPostRequest) {
         $errorList['username'] = 'Username is required';
     }
 
-    if (stripos($userName, ' ')) {
+    if (stripos($userName, ' ') !== false) {
         $errorList['username'] = 'Username must not contain space';
     }
 
@@ -38,10 +39,10 @@ if ($isPostRequest) {
     }
 
     if (empty($errorList)) {
-        $user = findUserByUsername($connectDatabase, $userName);
-        
+        $user = getUserByUserName($connectDatabase, $userName);
+
         $isUserNotFound = ($user === null);
-        $isPasswordInvalid = (!password_verify($password, $user['password']));
+        $isPasswordInvalid = !$isUserNotFound && !password_verify($password, $user['password']);
 
         if ($isUserNotFound || $isPasswordInvalid) {
             $errorList['credentials'] = 'Invalid username or password';
@@ -50,7 +51,7 @@ if ($isPostRequest) {
             $_SESSION['username'] = $userName;
             session_write_close();
             header('Location: index.php?page=recordlist');
-
+            
             exit();
         }
     }

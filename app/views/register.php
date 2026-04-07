@@ -2,7 +2,6 @@
 
 if (!defined('APP_RUNNING')) {
     http_response_code(403);
-    
     die('Direct access is not allowed');
 }
 
@@ -50,7 +49,7 @@ if (!defined('APP_RUNNING')) {
                 <?php endif; ?>
             </div>
 
-            <button type="submit" name="submit">Register</button>
+            <button type="submit" name="register">Register</button>
         </form>
 
         <a href="index.php?page=login">Login</a>

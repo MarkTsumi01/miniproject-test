@@ -1,3 +1,12 @@
+<?php
+
+if (!defined('APP_RUNNING')) {
+    http_response_code(403);
+    die('Direct access is not allowed');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +53,7 @@
                 <p><?= htmlspecialchars($errorList['credentials']) ?></p>
             <?php endif; ?>
 
-            <button type="submit" name="submit">Login</button>
+            <button type="submit" name="login">Login</button>
         </form>
 
         <a href="index.php?page=register">Register</a>
