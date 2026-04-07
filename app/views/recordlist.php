@@ -1,10 +1,21 @@
+<?php
+
+if (!defined('APP_RUNNING')) {
+    http_response_code(403);
+    die('Direct access is not allowed');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record List</title>
 </head>
+
 <body>
     <nav>
         <ul>
@@ -55,4 +66,5 @@
         </form>
     </main>
 </body>
+
 </html>

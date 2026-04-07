@@ -1,16 +1,16 @@
 <?php
 
-function getUserByUserName(mysqli $connectDatabase, string $userName)
+function getUserByUserName(mysqli $connectDatabase, string $userName): ?array
 {
-    $selectUserByUsername = '
+    $selectUserByUsernameQuery = '
         SELECT 
             id, 
             password 
         FROM users 
         WHERE username = ?
     ';
-    
-    $statement = $connectDatabase->prepare($selectUserByUsername);
+       
+    $statement = $connectDatabase->prepare($selectUserByUsernameQuery);
     $statement->bind_param('s', $userName);
     $statement->execute();
     $result = $statement->get_result()->fetch_assoc();
@@ -21,14 +21,14 @@ function getUserByUserName(mysqli $connectDatabase, string $userName)
 
 function addUser(mysqli $connectDatabase, string $userName, string $hashedPassword): int
 {
-    $insertUser = '
+    $insertUserQuery = '
         INSERT INTO users 
             (username, password)
         VALUES 
             (?, ?)
     ';
     
-    $statement = $connectDatabase->prepare($insertUser);
+    $statement = $connectDatabase->prepare($insertUserQuery);
     $statement->bind_param('ss', $userName, $hashedPassword);
     $statement->execute();
     $newUserId = $connectDatabase->insert_id;

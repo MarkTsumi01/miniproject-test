@@ -23,8 +23,8 @@ if ($isPostRequest) {
 
     $errorData = [];
 
-    $userName = trim($_POST['username'] ?? '');
-    $password = ($_POST['password'] ?? '');
+    $userName = trim($_POST['username']);
+    $password = $_POST['password'];
 
     if (empty($userName)) {
         $errorData['username'] = 'Username is required';

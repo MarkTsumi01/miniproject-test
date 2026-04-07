@@ -23,8 +23,8 @@ if ($isPostRequest) {
 
     $errorData = [];
 
-    $userName = trim($_POST['username'] ?? '');
-    $password = ($_POST['password'] ?? '');
+    $userName = trim($_POST['username']);
+    $password = $_POST['password'];
 
     if (empty($userName)) {
         $errorData['username'] = 'Username is required';
@@ -39,9 +39,9 @@ if ($isPostRequest) {
 
         $isUserNotFound = ($user === null);
         $isPasswordInvalid = !password_verify($password, $user['password']);
-        $isInValidCredential = ($isUserNotFound || $isPasswordInvalid);
+        $isInvalidCredential = ($isUserNotFound || $isPasswordInvalid);
 
-        if (!$isInValidCredential) {
+        if (!$isInvalidCredential) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $userName;
             header('Location: index.php?page=recordlist');
