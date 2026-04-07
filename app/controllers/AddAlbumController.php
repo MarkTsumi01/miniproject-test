@@ -25,7 +25,7 @@ if ($isPostRequest) {
     }
 
     if (empty($errorList)) {
-        $album = 
+        $album = getAlbumByAlbumName($connectDatabase, $albumName);
         $isBandAlreadyExists = isBandExists($connectDatabase, $albumName);
 
         if ($isBandAlreadyExists) {

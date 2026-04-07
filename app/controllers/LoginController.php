@@ -11,9 +11,7 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-$errorList = [];
-
-$isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
+$isPostRequest = ($_SERVER['REQUEST_METHOD'] === 'POST');
 $isRegister = isset($_POST['register']);
 
 if ($isPostRequest) {
@@ -23,35 +21,34 @@ if ($isPostRequest) {
         exit();
     }
 
+    $errorData = [];
+
     $userName = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if (empty($userName)) {
-        $errorList['username'] = 'Username is required';
-    }
-
-    if (stripos($userName, ' ') !== false) {
-        $errorList['username'] = 'Username must not contain space';
+        $errorData['username'] = 'Username is required';
     }
 
     if (empty($password)) {
-        $errorList['password'] = 'Password is required';
+        $errorData['password'] = 'Password is required';
     }
 
-    if (empty($errorList)) {
+    if (empty($errorData)) {
         $user = getUserByUserName($connectDatabase, $userName);
 
         $isUserNotFound = ($user === null);
-        $isPasswordInvalid = !$isUserNotFound && !password_verify($password, $user['password']);
+        $isPasswordInvalid = !password_verify($password, $user['password']);
+        $isInValidCredential = ($isUserNotFound || $isPasswordInvalid);
 
-        if ($isUserNotFound || $isPasswordInvalid) {
-            $errorList['credentials'] = 'Invalid username or password';
+        if ($isInValidCredential) {
+            $errorData['credentials'] = 'Invalid username or password';
         } else {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $userName;
             session_write_close();
             header('Location: index.php?page=recordlist');
-            
+
             exit();
         }
     }
