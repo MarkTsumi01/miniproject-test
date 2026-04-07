@@ -41,16 +41,15 @@ if ($isPostRequest) {
         $isPasswordInvalid = !password_verify($password, $user['password']);
         $isInValidCredential = ($isUserNotFound || $isPasswordInvalid);
 
-        if ($isInValidCredential) {
-            $errorData['credentials'] = 'Invalid username or password';
-        } else {
+        if (!$isInValidCredential) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $userName;
+            header('Location: index.php?page=recordlist');
+
+            exit();
         }
 
-        header('Location: index.php?page=recordlist');
-
-        exit();
+        $errorData['credentials'] = 'Invalid username or password';
     }
 }
 

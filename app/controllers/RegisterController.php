@@ -24,13 +24,13 @@ if ($isPostRequest) {
     $errorData = [];
 
     $userName = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $password = ($_POST['password'] ?? '');
 
     if (empty($userName)) {
         $errorData['username'] = 'Username is required';
     }
 
-    if (stripos($userName, ' ') !== false) {
+    if (stripos($userName, ' ')) {
         $errorData['username'] = 'Username must not contain space';
     }
 
@@ -43,19 +43,18 @@ if ($isPostRequest) {
 
         $isUserNotFound = ($user === null);
         
-        if (!$isUserNotFound) {
-            $errorData['username'] = 'Username is already exists';
-        } else {
+        if($isUserNotFound) {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $newuserId = addUser($connectDatabase, $userName, $hashedPassword);
 
             $_SESSION['user_id'] = $newuserId;
             $_SESSION['username'] = $userName;
+            header('Location: index.php?page=recordlist');
+
+            exit();
         }
 
-        header('Location: index.php?page=recordlist');
-
-        exit();
+        $errorData['username'] = 'Username is already exists';
     }
 }
 
