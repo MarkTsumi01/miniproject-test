@@ -1,80 +1,38 @@
 <?php
 
-function createUser(mysqli $database, string $userName, string $hashedPassword): int
+function getUserByUserName(mysqli $connectDatabase, string $userName)
 {
-    $statement = $database->prepare('
-        INSERT INTO 
-            users (username, password) 
-        VALUES 
-            (?, ?)
-    ');
-    
-    $statement->bind_param('ss', $userName, $hashedPassword);
-    $statement->execute();
-
-    $newUserId = $database->insert_id;
-    $statement->close();
-
-    return $newUserId;
-}
-
-function existsByUsername(mysqli $database, string $userName): bool
-{
-    $statement = $database->prepare('
-        SELECT 
-            id 
-        FROM 
-            users 
-        WHERE 
-            username = ?
-    ');
-    
-    $statement->bind_param('s', $userName);
-    $statement->execute();
-    $statement->store_result();
-
-    $isExists = ($statement->num_rows > 0);
-    $statement->close();
-
-    return $isExists;
-}
-
-function findUserByUsername(mysqli $database, string $userName): ?array 
-{
-    $statement = $database->prepare('
+    $selectUserByUsername = '
         SELECT 
             id, 
             password 
         FROM users 
-        WHERE username = ? 
-    ');
+        WHERE username = ?
+    ';
     
-    if (!$statement) {
-        return null; 
-    }
-
+    $statement = $connectDatabase->prepare($selectUserByUsername);
     $statement->bind_param('s', $userName);
     $statement->execute();
-    $statement->store_result(); 
-    
-    if ($statement->num_rows === 0) {
-        $statement->close();
-        
-        return null;
-    }
-
-    $statement->bind_result($userId, $hashedPassword);
-    $statement->fetch(); 
+    $result = $statement->get_result()->fetch_assoc();
     $statement->close();
-
-    $resultList = ['id' => $userId, 'password' => $hashedPassword];
-            
-    return $resultList;
+    
+    return $result;
 }
 
-function passwordVerify(string $password, string $hashedPassword): bool
+function addUser(mysqli $connectDatabase, string $userName, string $hashedPassword): int
 {
-    $isPasswordMatch = password_verify($password, $hashedPassword);
+    $insertUser = '
+        INSERT INTO users 
+            (username, password)
+        VALUES 
+            (?, ?)
+    ';
     
-    return $isPasswordMatch;
+    $statement = $connectDatabase->prepare($insertUser);
+    $statement->bind_param('ss', $userName, $hashedPassword);
+    $statement->execute();
+    $newUserId = $connectDatabase->insert_id;
+    $statement->close();
+    
+    return $newUserId;
 }

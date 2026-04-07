@@ -1,79 +1,109 @@
 <?php
 
-function getAllBands(mysqli $connectDatabase, int $recordId)
+function getBandsByRecordId(mysqli $connectDatabase, int $recordId)
 {
-    $statement = $connectDatabase->prepare('
+    $selectBandsWithAlbumCount = '
         SELECT 
             bands.id, 
             bands.name, 
             COUNT(albums.id) AS album_count
-        FROM 
-            bands
-        LEFT JOIN 
-            albums 
-            ON albums.band_id = bands.id
-        WHERE
-            bands.record_id = ?
+        FROM bands
+            LEFT JOIN albums 
+                ON albums.band_id = bands.id
+        WHERE bands.record_id = ?
         GROUP BY 
             bands.id, 
             bands.name
         ORDER BY 
             bands.name ASC
-    ');
-    
+    ';
+
+    $statement = $connectDatabase->prepare($selectBandsWithAlbumCount);
     $statement->bind_param('i', $recordId);
     $statement->execute();
-    $bandResult = $statement->get_result();
+    $result = $statement->get_result();
     $statement->close();
-    
-    return $bandResult;
+
+    return $result;
 }
 
-function checkBand(mysqli $connectDatabase, string $bandName): bool
+function getBandByBandId(mysqli $connectDatabase, int $bandId): array
 {
-    $statement = $connectDatabase->prepare('
+    $selectBandById = '
+        SELECT 
+            id, 
+            name 
+        FROM bands
+        WHERE id = ?
+    ';
+
+    $statement = $connectDatabase->prepare($selectBandById);
+    $statement->bind_param('i', $bandId);
+    $statement->execute();
+    $band = $statement->get_result()->fetch_assoc();
+    $statement->close();
+
+    return $band;
+}
+
+function isBandExists(mysqli $connectDatabase, string $bandName): bool
+{
+    $selectBandIdByName = '
         SELECT 
             id
-        FROM
-            bands
-        WHERE
-            name = ?
-    ');
+        FROM bands
+        WHERE name = ?
+    ';
+
+    $statement = $connectDatabase->prepare($selectBandIdByName);
     $statement->bind_param('s', $bandName);
     $statement->execute();
     $statement->store_result();
-    
-    $isFound = ($statement->num_rows > 0) ? true : false;
-    
+    $isFound = $statement->num_rows > 0;
     $statement->close();
-    
+
     return $isFound;
 }
 
 function addBand(mysqli $connectDatabase, string $bandName, int $recordId): void
 {
-    $statement = $connectDatabase->prepare('
+    $insertBandWithRecordId = '
         INSERT INTO 
             bands (name, record_id) 
         VALUES 
             (?, ?)
-    ');
-    
+    ';
+
+    $statement = $connectDatabase->prepare($insertBandWithRecordId);
     $statement->bind_param('si', $bandName, $recordId);
     $statement->execute();
     $statement->close();
 }
 
-function deleteBand(mysqli $connectDatabase, int $bandId)
+function updateBand(mysqli $connectDatabsae, $bandName, $bandId): void
 {
-    $statement = $connectDatabase->prepare('
-        DELETE
-        FROM
-            bands
-        WHERE
-            id = ?
-    ');
+    $updateBandWithBandId = '
+        UPDATE bands
+            SET name = ?
+        WHERE id = ?
+    ';
     
+    $statement = $connectDatabsae->prepare($updateBandWithBandId);
+    $statement->bind_param('si', $bandName, $bandId);
+    $statement->execute();
+    $statement->close();
+}
+
+
+
+function deleteBand(mysqli $connectDatabase, int $bandId): void
+{
+    $deleteBandById = '
+        DELETE FROM bands
+        WHERE id = ?
+    ';
+
+    $statement = $connectDatabase->prepare($deleteBandById);
     $statement->bind_param('i', $bandId);
     $statement->execute();
     $statement->close();

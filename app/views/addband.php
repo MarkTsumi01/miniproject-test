@@ -13,35 +13,35 @@
     </script>
 </head>
 <body>
-    <ul style="list-style-type:none; display:flex; gap:20px;">
-        <li><a href="index.php?page=recordlist">Record List</a></li>
-        <li><a href="index.php?page=bandlist">Band List</a></li>
-    </ul>
-    
-    <h1>Add Band</h1>
-    
-    <form method="post">
-        <label for="record_name">Band Name:</label>
-        <input 
-            type="text" 
-            id="band_name" 
-            name="band_name" 
-            value="<?php echo isset($_POST["band_name"]) ? htmlspecialchars($_POST['band_name']) : ''; ?>">
-        <?php if (!empty($errorList['band_name'])) {
-            echo '<p>' . htmlspecialchars($errorList['band_name']) . '</p>';
-        } ?>
-        <br>
-        
-        <label for="record">Choose Record:</label>
-        <select name="record_name" id="record">
-          <?php while ($record = $recordResult->fetch_assoc()): ?>
-              <option value="<?php echo $record['name']; ?>"><?php echo $record['name']; ?></option>
-          <?php endwhile; ?>
-        </select>
-        <br>
-        
-        <input type="submit" value="Save">
-    </form>
-    
+    <main>
+        <h1>Add Band</h1>
+
+        <form method="post">
+            <div>
+                <label for="band_name">Band Name:</label>
+                <input
+                    type="text"
+                    id="band_name"
+                    name="band_name"
+                    value="<?= htmlspecialchars($_POST['band_name'] ?? '') ?>">
+                <?php if (!empty($errorList['band_name'])): ?>
+                    <p><?= htmlspecialchars($errorList['band_name']) ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label for="record_name">Choose Record:</label>
+                <select name="record_name" id="record_name">
+                    <?php while ($record = $recordResult->fetch_assoc()): ?>
+                        <option value="<?= htmlspecialchars($record['name']) ?>">
+                            <?= htmlspecialchars($record['name']) ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <button type="submit">Save</button>
+        </form>
+    </main>
 </body>
 </html>

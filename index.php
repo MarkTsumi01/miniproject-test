@@ -1,37 +1,17 @@
 <?php
 
-// $page = $_GET['page'] ?? 'login';
-
-// switch ($page) {
-//     case 'login':
-//         require __DIR__ . '/app/controllers/LoginController.php';
-        
-//         break;
-//     case 'register':
-//         require __DIR__ . '/app/controllers/RegisterController.php';
-        
-//         break;
-//     case 'recordlist':
-//         require __DIR__ . '/app/controllers/RecordListController.php';
-        
-//         break;
-//     case 'addrecord':
-//         require __DIR__ . '/app/controllers/AddRecordController.php';
-            
-//         break;
-//     default:
-//         http_response_code(404);
-//         echo '404 Not Found';
-// }
+define('APP_RUNNING', true);
 
 $routes = [
-    'login' => '/app/controllers/LoginController.php',
-    'register' => '/app/controllers/RegisterController.php',
+    'login'      => '/app/controllers/LoginController.php',
+    'register'   => '/app/controllers/RegisterController.php',
     'recordlist' => '/app/controllers/RecordListController.php',
-    'addrecord' => '/app/controllers/AddRecordController.php',
+    'addrecord'  => '/app/controllers/AddRecordController.php',
     'editrecord' => '/app/controllers/EditRecordController.php',
-    'bandlist' => '/app/controllers/BandListController.php',
-    'addband' => '/app/controllers/AddBandController.php'
+    'bandlist'   => '/app/controllers/BandListController.php',
+    'addband'    => '/app/controllers/AddBandController.php',
+    'editband' => '/app/controllers/EditBandController.php',
+    'albumlist' => '/app/controllers/AlbumListController.php'
 ];
 
 $page = $_GET['page'] ?? 'login';

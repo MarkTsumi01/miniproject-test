@@ -13,42 +13,48 @@ if (isset($_SESSION['user_id'])) {
 
 $errorList = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['login'])) {
+$isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
+$isLogin = isset($_POST['login']);
+
+if ($isPostRequest) {
+    if ($isLogin) {
         header('Location: index.php?page=login');
         
         exit();
     }
 
     $userName = trim($_POST['username'] ?? '');
-    $password = ($_POST['password'] ?? '');
+    $password = $_POST['password'] ?? '';
 
     if (empty($userName)) {
         $errorList['username'] = 'Username is required';
     }
-    
-    if (stripos($userName, ' ')) {
+
+    if (stripos($userName, ' ') !== false) {
         $errorList['username'] = 'Username must not contain space';
     }
-    
+
     if (empty($password)) {
         $errorList['password'] = 'Password is required';
     }
 
     if (empty($errorList)) {
-        if (existsByUsername($connectDatabase, $userName)) {
-            $errorList['username'] = 'Username already exists';
-        } else {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $newUserId = createUser($connectDatabase, $userName, $hashedPassword);
+        $user = getUserByUserName($connectDatabase, $userName);
 
-            session_regenerate_id(true);
-            $_SESSION['user_id'] = $newUserId;
+        $isUserNotFound = ($user === null);
+        
+        if ($isUserNotFound) {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $newuserId = addUser($connectDatabase, $userName, $hashedPassword);
+            
+            $_SESSION['user_id'] = $newuserId;
             $_SESSION['username'] = $userName;
             session_write_close();
             header('Location: index.php?page=recordlist');
             
             exit();
+        } else {
+            $errorList['username'] = 'Username is already exists';    
         }
     }
 }

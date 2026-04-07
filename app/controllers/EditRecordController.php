@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $recordId = (int) $_GET['record_id'];
-$record = getRecord($connectDatabase, $recordId);
+$record = getRecordById($connectDatabase, $recordId);
 
 $errorList = [];
 
@@ -27,18 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if (empty($errorList)) {
         if ($recordName === $record['name']) {
-            editRecord($connectDatabase, $recordName, $recordId);
+            updateRecord($connectDatabase, $recordName, $recordId);
             header('Location: index.php?page=recordlist');
             
             exit();
         }
         
-        $isFounded = checkRecord($connectDatabase, $recordName);
+        $isRecordAlreadyExists = isRecordExists($connectDatabase, $recordName);
        
-        if ($isFounded) {
+        if ($isRecordAlreadyExists) {
            $errorList['record_name'] = 'This name already exists';
        } else {
-           editRecord($connectDatabase, $recordName, $recordId);
+           updateRecord($connectDatabase, $recordName, $recordId);
            header('Location: index.php?page=recordlist');
            
            exit();

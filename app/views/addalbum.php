@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Record</title>
+    <title>Add Album</title>
     <script>
         window.addEventListener("pageshow", function(event) {
             if (event.persisted) {
@@ -14,18 +14,18 @@
 </head>
 <body>
     <main>
-        <h1>Edit Record</h1>
+        <h1>Add Album</h1>
 
         <form method="post">
             <div>
-                <label for="record_name">Record Name:</label>
+                <label for="album_name">Album Name:</label>
                 <input
                     type="text"
-                    id="record_name"
-                    name="record_name"
-                    value="<?= htmlspecialchars($_POST['record_name'] ?? $record['name']) ?>">
-                <?php if (!empty($errorList['record_name'])): ?>
-                    <p><?= htmlspecialchars($errorList['record_name']) ?></p>
+                    id="album_name"
+                    name="album_name"
+                    value="<?= htmlspecialchars($_POST['album_name'] ?? '') ?>">
+                <?php if (!empty($errorList['album_name'])): ?>
+                    <p><?= htmlspecialchars($errorList['album_name']) ?></p>
                 <?php endif; ?>
             </div>
 

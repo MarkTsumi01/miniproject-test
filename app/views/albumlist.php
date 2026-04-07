@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Band List</title>
+    <title>Album List</title>
     <script>
         window.addEventListener('pageshow', function(event) {
             if (event.persisted) {
@@ -15,40 +15,40 @@
 <body>
     <nav>
         <ul>
-            <li><a href="index.php?page=recordlist">Record List</a></li>
+            <li><a href="index.php?page=recordlist">Album List</a></li>
         </ul>
     </nav>
 
     <main>
-        <h1>Band List</h1>
+        <h1>Album List</h1>
 
-        <a href="index.php?page=addband&record_id=<?= (int) $recordId ?>">Add Band</a>
+        <a href="index.php?page=addband&record_id=<?= (int) $recordId ?>">Add Album</a>
 
         <table border="1">
             <thead>
                 <tr>
-                    <th>Band Name</th>
-                    <th>Albums</th>
+                    <th>Album Name</th>
+                    <th>Songs</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($bandResult as $band): ?>
+                <?php foreach ($albumResult as $album): ?>
                     <tr>
                         <td>
-                            <a href="index.php?page=albumlist&band_id=<?= (int) $band['id'] ?>">
-                                <?= htmlspecialchars($band['name']) ?>
+                            <a href="index.php?page=songlist&album_id=<?= (int) $album['id'] ?>">
+                                <?= htmlspecialchars($album['name']) ?>
                             </a>
                         </td>
-                        <td><?= (int) $band['album_count'] ?></td>
+                        <td><?= (int) $album['song_count'] ?></td>
                         <td>
-                            <a href="index.php?page=editband&band_id=<?= (int) $band['id'] ?>&record_id=<?= $recordId ?>">Edit</a>
+                            <a href="index.php?page=editalbum&album_id=<?= (int) $album['id'] ?>&band_id=<?= $bandId ?>">Edit</a>
 
                             <form method="post" style="display:inline;">
                                 <input
                                     type="hidden"
-                                    name="delete_band"
-                                    value="<?= (int) $band['id'] ?>">
+                                    name="delete_album"
+                                    value="<?= (int) $album['id'] ?>">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>

@@ -3,8 +3,8 @@
 session_start();
 
 require __DIR__ . '/../models/Database.php';
+require __DIR__ . '/../models/AlbumModel.php';
 require __DIR__ . '/../models/BandModel.php';
-require __DIR__ . '/../models/RecordModel.php';
 
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
@@ -17,23 +17,20 @@ $errorList = [];
 $isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
 
 if ($isPostRequest) {
-    $bandName = trim($_POST['band_name'] ?? '');
-    $recordName = trim($_POST['record_name'] ?? '');
+    $albumName = trim($_POST['album_name'] ?? '');
 
-    if (empty($bandName)) {
-        $errorList['band_name'] = 'Band name is required';
+    if (empty($albumName)) {
+        $errorList['album_name'] = 'Album name is required';
     }
 
     if (empty($errorList)) {
-        $recordData = getRecordIdByName($connectDatabase, $recordName);
-        $recordId = $recordData['id'];
-
-        $isBandAlreadyExists = isBandExists($connectDatabase, $bandName);
+        
+        $isBandAlreadyExists = isBandExists($connectDatabase, $albumName);
 
         if ($isBandAlreadyExists) {
             $errorList['band_name'] = 'This band name already exists';
         } else {
-            addBand($connectDatabase, $bandName, $recordId);
+            addAlbum($connectDatabase, $bandName, $recordId);
             header('Location: index.php?page=bandlist&record_id=' . $recordId);
 
             exit();

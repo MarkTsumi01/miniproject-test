@@ -8,32 +8,34 @@ require __DIR__ . '/../models/RecordModel.php';
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
     header('Location: index.php?page=login');
-    
+
     exit();
 }
 
 $errorList = [];
+$isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $recordName = $_POST['record_name'];
-    
+if ($isPostRequest) {
+    $recordName = trim($_POST['record_name'] ?? '');
+
     if (empty($recordName)) {
         $errorList['record_name'] = 'Record name is required';
     }
-    
+
     if (empty($errorList)) {
-       
-        $isFounded = checkRecord($connectDatabase, $recordName);
-       
-        if ($isFounded) {
-           $errorList['record_name'] = 'This name already exists';
-       } else {
-           addRecord($connectDatabase, $recordName);
-           header('Location: index.php?page=recordlist');
-           
-           exit();
-       }
-   }
+        $isRecordAlreadyExists = isRecordExists($connectDatabase, $recordName);
+
+        if ($isRecordAlreadyExists) {
+            $errorList['record_name'] = 'This name already exists';
+        } else {
+            insertRecord($connectDatabase, $recordName);
+            header('Location: index.php?page=recordlist');
+
+            exit();
+        }
+    }
 }
+
+session_write_close();
 
 require __DIR__ . '/../views/addrecord.php';
