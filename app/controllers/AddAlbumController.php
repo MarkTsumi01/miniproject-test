@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $errorList = [];
+
 $isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
 
 if ($isPostRequest) {
@@ -24,7 +25,7 @@ if ($isPostRequest) {
     }
 
     if (empty($errorList)) {
-        
+        $album = 
         $isBandAlreadyExists = isBandExists($connectDatabase, $albumName);
 
         if ($isBandAlreadyExists) {
