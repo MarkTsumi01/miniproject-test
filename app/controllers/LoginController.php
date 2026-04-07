@@ -24,7 +24,7 @@ if ($isPostRequest) {
     $errorData = [];
 
     $userName = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    $password = ($_POST['password'] ?? '');
 
     if (empty($userName)) {
         $errorData['username'] = 'Username is required';
@@ -46,11 +46,11 @@ if ($isPostRequest) {
         } else {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $userName;
-            session_write_close();
-            header('Location: index.php?page=recordlist');
-
-            exit();
         }
+
+        header('Location: index.php?page=recordlist');
+
+        exit();
     }
 }
 

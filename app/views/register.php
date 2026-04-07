@@ -33,8 +33,8 @@ if (!defined('APP_RUNNING')) {
                     id="username"
                     name="username"
                     value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
-                <?php if (!empty($errorList['username'])): ?>
-                    <p><?= htmlspecialchars($errorList['username']) ?></p>
+                <?php if (!empty($errorData['username'])): ?>
+                    <p><?= htmlspecialchars($errorData['username']) ?></p>
                 <?php endif; ?>
             </div>
 
@@ -44,8 +44,8 @@ if (!defined('APP_RUNNING')) {
                     type="password"
                     id="password"
                     name="password">
-                <?php if (!empty($errorList['password'])): ?>
-                    <p><?= htmlspecialchars($errorList['password']) ?></p>
+                <?php if (!empty($errorData['password'])): ?>
+                    <p><?= htmlspecialchars($errorData['password']) ?></p>
                 <?php endif; ?>
             </div>
 
