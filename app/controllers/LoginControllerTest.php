@@ -14,12 +14,27 @@ function redirect(string $url): void
     exit();
 }
 
+// function validateLoginInput(string $username, string $password): array
+// {
+//     return array_filter([
+//         'username' => $username ? null : 'Username is required',
+//         'password' => $password ? null : 'Password is required',
+//     ]);
+// }
+
 function validateLoginInput(string $username, string $password): array
 {
-    return array_filter([
-        'username' => $username ? null : 'Username is required',
-        'password' => $password ? null : 'Password is required',
-    ]);
+    $errorData = [];
+
+    if (empty($username)) {
+        $errorData['username'] = 'Username is required';        
+    }
+
+    if (empty($password)) {
+        $errorData['password'] = 'Password is required';
+    }
+
+    return $errorData;
 }
 
 function handleLogin(string $username, string $password): bool

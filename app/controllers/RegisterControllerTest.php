@@ -14,28 +14,46 @@ function redirect(string $url): void
     exit();
 }
 
-function validateRegisterInput(string $username, string $password): array
-{
-    $errorData = array_filter([
-        'username' => !$username ? 'Username is required'
-            : (stripos($username, ' ') !== false ? 'Username must not contain space' : null),
-        'password' => $password ? null : 'Password is required',
-    ]);
+// function validateRegisterInput(string $username, string $password): array
+// {
+//     $errorData = array_filter([
+//         'username' => !$username ? 'Username is required'
+//             : (stripos($username, ' ') !== false ? 'Username must not contain space' : null),
+//         'password' => $password ? null : 'Password is required',
+//     ]);
 
-    return $errorData; 
+//     return $errorData; 
+// }
+
+function validateRegisterInput(string $username, string $password): array 
+{
+        $errorData = [];
+
+        if (empty($username)) {
+            $errorData['username'] = 'Username is required';   
+        }
+
+        if (stripos($username, ' ')) {
+            $errorData['username'] = 'Username must not contain space';
+        }
+
+        if (empty($password)) {
+            $errorData['password'] = 'Password is required';
+        }
+        
+        return $errorData;
 }
 
 function handleRegister(string $username, string $password): bool
 {
     $user = getUserByUsername($username);
     if (!empty($user)) {
-
         return false;
     }
 
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $newUserId = addUser($username, $hashedPassword);
-    $_SESSION['user_id'] = $newUserId;
+    $hashedpassword = password_hash($password, PASSWORD_DEFAULT);
+    $newUserid = addUser($username, $hashedpassword);
+    $_SESSION['user_id'] = $newUserid;
     $_SESSION['username'] = $username;
 
     return true;

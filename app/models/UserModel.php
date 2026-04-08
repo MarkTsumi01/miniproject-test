@@ -27,7 +27,7 @@ function getUserByUsername(string $username): array
     return $result;
 }
 
-function addUser(string $username, string $hashedPassword): int
+function addUser(string $username, string $hashedpassword): int
 {
     global $connectDatabase;
 
@@ -39,10 +39,10 @@ function addUser(string $username, string $hashedPassword): int
     ';
     
     $statement = $connectDatabase->prepare($sql);
-    $statement->bind_param('ss', $username, $hashedPassword);
+    $statement->bind_param('ss', $username, $hashedpassword);
     $statement->execute();
-    $newUserId = $connectDatabase->insert_id;
+    $newUserid = $connectDatabase->insert_id;
     $statement->close();
     
-    return $newUserId;
+    return $newUserid;
 }
