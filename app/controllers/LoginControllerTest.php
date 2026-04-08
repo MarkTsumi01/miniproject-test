@@ -2,8 +2,7 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/UserModel.php';
+require __DIR__ . '/../Models/UserModel.php';
 
 const RECORD_LIST_PAGE = 'index.php?page=recordlist';
 const REGISTER_PAGE    = 'index.php?page=register';
@@ -11,6 +10,7 @@ const REGISTER_PAGE    = 'index.php?page=register';
 function redirect(string $url): void
 {
     header("Location: $url");
+
     exit();
 }
 
@@ -22,12 +22,13 @@ function validateLoginInput(string $username, string $password): array
     ]);
 }
 
-function attemptLogin(string $username, string $password): bool
+function handleLogin(string $username, string $password): bool
 {
     $user = getUserByUsername($username);
+    $isUserInvalid = empty($user);
+    $isPasswordInvalid = !password_verify($password, $user['password']);
 
-    if (empty($user) || !password_verify($password, $user['password'])) {
-
+    if ($isUserInvalid || $isPasswordInvalid) {
         return false;
     }
 
@@ -55,7 +56,7 @@ if ($isPost) {
 
     $errorData = validateLoginInput($username, $password);
 
-    if (empty($errorData) && !attemptLogin($username, $password)) {
+    if (empty($errorData) && !handleLogin($username, $password)) {
         $errorData['credentials'] = 'Invalid username or password';
     }
 

@@ -2,8 +2,7 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/UserModel.php';
+require __DIR__ . '/../Models/UserModel.php';
 
 const RECORDLIST_PAGE = 'index.php?page=recordlist';
 const LOGIN_PAGE = 'index.php?page=login';
@@ -11,6 +10,7 @@ const LOGIN_PAGE = 'index.php?page=login';
 function redirect(string $url): void
 {
     header("Location: $url");
+
     exit();
 }
 
@@ -25,7 +25,7 @@ function validateRegisterInput(string $username, string $password): array
     return $errorData; 
 }
 
-function attemptRegister(string $username, string $password): bool
+function handleRegister(string $username, string $password): bool
 {
     $user = getUserByUsername($username);
     if (!empty($user)) {
@@ -45,7 +45,7 @@ if (isset($_SESSION['user_id'])) {
     redirect(RECORDLIST_PAGE);
 }
 
-$isPost = $_SERVER['REQUEST_METHOD'] === 'POST';
+$isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
 
 if ($isPost && isset($_POST['login'])) {
     redirect(LOGIN_PAGE);
@@ -59,7 +59,7 @@ if ($isPost) {
 
     $errorData = validateRegisterInput($username, $password);
 
-    if (empty($errorData) && !attemptRegister($username, $password)) {
+    if (empty($errorData) && !handleRegister($username, $password)) {
         $errorData['username'] = 'Username already exists';
     }
 

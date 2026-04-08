@@ -2,8 +2,8 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/UserModel.php';
+require __DIR__ . '/../Models/Database.php';
+require __DIR__ . '/../Models/UserModel.php';
 
 if (isset($_SESSION['user_id'])) {
     header('Location: index.php?page=recordlist');
@@ -35,7 +35,7 @@ if ($isPostRequest) {
     }
 
     if (empty($errorData)) {
-        $user = getUserByUserName($connectDatabase, $userName);
+        $user = getUserByUserName($userName);
 
         $isUserNotFound = ($user === null);
         $isPasswordInvalid = !password_verify($password, $user['password']);

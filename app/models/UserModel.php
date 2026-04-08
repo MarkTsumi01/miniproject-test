@@ -1,6 +1,8 @@
 <?php
 
-function getUserByUsername(string $username): ?array
+require __DIR__ . '/Database.php';
+
+function getUserByUsername(string $username): array
 {
     global $connectDatabase;
 
@@ -16,8 +18,12 @@ function getUserByUsername(string $username): ?array
     $statement->bind_param('s', $username);
     $statement->execute();
     $result = $statement->get_result()->fetch_assoc();
-    $statement->close();
-    
+    $statement->close(); 
+
+    if (empty($result)) {
+        return [];
+    }
+
     return $result;
 }
 

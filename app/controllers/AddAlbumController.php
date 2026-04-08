@@ -2,9 +2,9 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/AlbumModel.php';
-require __DIR__ . '/../models/BandModel.php';
+require __DIR__ . '/../Models/Database.php';
+require __DIR__ . '/../Models/AlbumModel.php';
+require __DIR__ . '/../Models/BandModel.php';
 
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
