@@ -1,8 +1,10 @@
 <?php
 
-function getUserByUserName(mysqli $connectDatabase, string $userName): ?array
+function getUserByUsername(string $username): ?array
 {
-    $selectUserByUsernameQuery = '
+    global $connectDatabase;
+
+    $sql = '
         SELECT 
             id, 
             password 
@@ -10,8 +12,8 @@ function getUserByUserName(mysqli $connectDatabase, string $userName): ?array
         WHERE username = ?
     ';
        
-    $statement = $connectDatabase->prepare($selectUserByUsernameQuery);
-    $statement->bind_param('s', $userName);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('s', $username);
     $statement->execute();
     $result = $statement->get_result()->fetch_assoc();
     $statement->close();
@@ -19,17 +21,19 @@ function getUserByUserName(mysqli $connectDatabase, string $userName): ?array
     return $result;
 }
 
-function addUser(mysqli $connectDatabase, string $userName, string $hashedPassword): int
+function addUser(string $username, string $hashedPassword): int
 {
-    $insertUserQuery = '
+    global $connectDatabase;
+
+    $sql = '
         INSERT INTO users 
             (username, password)
         VALUES 
             (?, ?)
     ';
     
-    $statement = $connectDatabase->prepare($insertUserQuery);
-    $statement->bind_param('ss', $userName, $hashedPassword);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('ss', $username, $hashedPassword);
     $statement->execute();
     $newUserId = $connectDatabase->insert_id;
     $statement->close();
