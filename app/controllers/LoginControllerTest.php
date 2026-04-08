@@ -4,12 +4,12 @@ session_start();
 
 require __DIR__ . '/../Models/UserModel.php';
 
-const RECORD_LIST_PAGE = 'index.php?page=recordlist';
-const REGISTER_PAGE    = 'index.php?page=register';
+const RECORDLIST_PAGE = 'index.php?page=recordlist';
+const REGISTER_PAGE = 'index.php?page=register';
 
 function redirect(string $url): void
 {
-    header("Location: $url");
+    header('Location: ' . $url);
 
     exit();
 }
@@ -54,7 +54,7 @@ function handleLogin(string $username, string $password): bool
 }
 
 if (isset($_SESSION['user_id'])) {
-    redirect(RECORD_LIST_PAGE);
+    redirect(RECORDLIST_PAGE);
 }
 
 $isPost = $_SERVER['REQUEST_METHOD'] === 'POST';
@@ -76,7 +76,7 @@ if ($isPost) {
     }
 
     if (empty($errorData)) {
-        redirect(RECORD_LIST_PAGE);
+        redirect(RECORDLIST_PAGE);
     }
 }
 

@@ -1,8 +1,12 @@
 <?php
 
-function getRecordsWithBandCount(mysqli $connectDatabase)
+require __DIR__ . '/Database.php';
+
+function getRecordsWithBandCount(): mysqli_result
 {
-    $selectRecordsWithBandCount = '
+    global $connectDatabase;
+
+    $sql= '
         SELECT 
             records.id, 
             records.name, 
@@ -17,7 +21,7 @@ function getRecordsWithBandCount(mysqli $connectDatabase)
             records.name ASC
     ';
 
-    $statement = $connectDatabase->prepare($selectRecordsWithBandCount);
+    $statement = $connectDatabase->prepare($sql);
     $statement->execute();
     $result = $statement->get_result();
     $statement->close();
@@ -25,9 +29,11 @@ function getRecordsWithBandCount(mysqli $connectDatabase)
     return $result;
 }
 
-function getRecordById(mysqli $connectDatabase, int $recordId): array
+function getRecordById(int $recordid): array
 {
-    $selectRecordById = '
+    global $connectDatabase;
+
+    $sql = '
         SELECT 
             id, 
             name 
@@ -35,8 +41,8 @@ function getRecordById(mysqli $connectDatabase, int $recordId): array
         WHERE id = ?
     ';
 
-    $statement = $connectDatabase->prepare($selectRecordById);
-    $statement->bind_param('i', $recordId);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('i', $recordid);
     $statement->execute();
     $record = $statement->get_result()->fetch_assoc();
     $statement->close();
@@ -44,17 +50,19 @@ function getRecordById(mysqli $connectDatabase, int $recordId): array
     return $record;
 }
 
-function getRecordIdByName(mysqli $connectDatabase, string $recordName): array
+function getRecordIdByName(string $recordname): array
 {
-    $selectRecordIdByName = '
+    global $connectDatabase;
+
+    $sql = '
         SELECT 
             id
         FROM records
         WHERE name = ?
     ';
 
-    $statement = $connectDatabase->prepare($selectRecordIdByName);
-    $statement->bind_param('s', $recordName);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('s', $recordname);
     $statement->execute();
     $statement->bind_result($recordId);
     $statement->fetch();
@@ -63,17 +71,19 @@ function getRecordIdByName(mysqli $connectDatabase, string $recordName): array
     return ['id' => $recordId];
 }
 
-function isRecordExists(mysqli $connectDatabase, string $recordName): bool
+function isRecordExists(string $recordname): bool
 {
-    $selectRecordIdByName = '
+    global $connectDatabase;
+
+    $sql = '
         SELECT 
             id 
         FROM records 
         WHERE name = ?
     ';
 
-    $statement = $connectDatabase->prepare($selectRecordIdByName);
-    $statement->bind_param('s', $recordName);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('s', $recordname);
     $statement->execute();
     $statement->store_result();
     $isFound = $statement->num_rows > 0;
@@ -82,45 +92,51 @@ function isRecordExists(mysqli $connectDatabase, string $recordName): bool
     return $isFound;
 }
 
-function insertRecord(mysqli $connectDatabase, string $recordName): void
+function addRecord(string $recordname): void
 {
-    $insertRecord = '
+    global $connectDatabase;
+
+    $sql = '
         INSERT INTO records 
            (name)
         VALUES 
             (?)
     ';
 
-    $statement = $connectDatabase->prepare($insertRecord);
-    $statement->bind_param('s', $recordName);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('s', $recordname);
     $statement->execute();
     $statement->close();
 }
 
-function updateRecord(mysqli $connectDatabase, string $recordName, int $recordId): void
+function updateRecord(string $recordname, int $recordid): void
 {
-    $updateRecordNameById = '
+    global $connectDatabase;
+
+    $sql = '
         UPDATE records
         SET 
             name = ?
         WHERE id = ?
     ';
 
-    $statement = $connectDatabase->prepare($updateRecordNameById);
-    $statement->bind_param('si', $recordName, $recordId);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('si', $recordname, $recordid);
     $statement->execute();
     $statement->close();
 }
 
-function deleteRecord(mysqli $connectDatabase, int $recordId): void
+function deleteRecord(int $recordid): void
 {
-    $deleteRecordById = '
+    global $connectDatabase;
+
+    $sql = '
         DELETE FROM records 
         WHERE id = ?
     ';
 
-    $statement = $connectDatabase->prepare($deleteRecordById);
-    $statement->bind_param('i', $recordId);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('i', $recordid);
     $statement->execute();
     $statement->close();
 }

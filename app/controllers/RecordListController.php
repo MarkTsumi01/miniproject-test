@@ -2,14 +2,20 @@
 
 session_start();
 
-require __DIR__ . '/../Models/Database.php';
 require __DIR__ . '/../Models/RecordModel.php';
 
-if (!isset($_SESSION['user_id'])) {
-    session_write_close();
-    header('Location: index.php?page=login');
+const LOGIN_PAGE = 'index.php?page=login';
+const RECORDLIST_PAGE = 'index.php?page=recordlist';
+
+function redirect(string $url): void
+{
+    header('Location: ' . $url);
 
     exit();
+}
+
+if (!isset($_SESSION['user_id'])) {
+    redirect(LOGIN_PAGE);
 }
 
 $isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
@@ -19,24 +25,19 @@ $isLogout = isset($_POST['logout']);
 if ($isPostRequest && $isDeleteRecord) {
     $recordId = (int) $_POST['delete_record_id'];
     
-    deleteRecord($connectDatabase, $recordId);
-    
-    header('Location: index.php?page=recordlist');
+    deleteRecord($recordId);
 
-    exit();
+    redirect(RECORDLIST_PAGE);
 }
 
 if ($isPostRequest && $isLogout) {
     session_unset();
     session_destroy();
     setcookie(session_name(), '', time() - 3600, '/');
-    header('Location: index.php?page=login');
 
-    exit();
+    redirect(LOGIN_PAGE);
 }
 
 $recordsResult = getRecordsWithBandCount($connectDatabase);
-
-session_write_close();
 
 require __DIR__ . '/../views/recordlist.php';
