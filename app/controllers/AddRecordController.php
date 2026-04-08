@@ -2,15 +2,14 @@
 
 session_start();
 
-require __DIR__ . '/../Models/Database.php';
 require __DIR__ . '/../Models/RecordModel.php';
 
-const LOGIN_PAGE = 'index.php?page=login';
 const RECORDLIST_PAGE = 'index.php?page=recordlist';
+const LOGIN_PAGE = 'index.php?page=login';
 
-function redirect($url): void
+function redirect(string $url): void
 {
-    header('Location ' . $url);
+    header('Location: ' . $url);
 
     exit();
 }
@@ -23,7 +22,7 @@ $isPostRequest = ($_SERVER['REQUEST_METHOD'] === 'POST');
 
 if ($isPostRequest) {
     $recordName = trim($_POST['record_name'] ?? '');
-    
+
     $errorList = [];
 
     if (empty($recordName)) {
