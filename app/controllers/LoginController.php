@@ -2,54 +2,87 @@
 
 session_start();
 
-require __DIR__ . '/../Models/Database.php';
 require __DIR__ . '/../Models/UserModel.php';
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: index.php?page=recordlist');
-    
+const RECORDLIST_PAGE = 'index.php?page=recordlist';
+const REGISTER_PAGE = 'index.php?page=register';
+
+function redirect(string $url): void
+{
+    header('Location: ' . $url);
+
     exit();
 }
 
-$isPostRequest = ($_SERVER['REQUEST_METHOD'] === 'POST');
-$isRegister = isset($_POST['register']);
-
-if ($isPostRequest) {
-    if ($isRegister) {
-        header('Location: index.php?page=register');
-        
-        exit();
-    }
-
+function getErrorData(string $username, string $password): array
+{
     $errorData = [];
 
-    $userName = trim($_POST['username']);
-    $password = $_POST['password'];
-
-    if (empty($userName)) {
-        $errorData['username'] = 'Username is required';
+    if (empty($username)) {
+        $errorData['username'] = 'Username is required';        
     }
 
     if (empty($password)) {
         $errorData['password'] = 'Password is required';
     }
 
-    if (empty($errorData)) {
-        $user = getUserByUserName($userName);
+    return $errorData;
+}
 
-        $isUserNotFound = ($user === null);
-        $isPasswordInvalid = !password_verify($password, $user['password']);
-        $isInvalidCredential = ($isUserNotFound || $isPasswordInvalid);
+function passwordVerify(string $password, string $hashPassword): bool
+{
+    $isPasswordvalid = password_verify($password, $hashPassword);
 
-        if (!$isInvalidCredential) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $userName;
-            header('Location: index.php?page=recordlist');
+    if ($isPasswordvalid) {
+        return true;
+    }
 
-            exit();
-        }
+    return false;
+}
 
+function isCredentialCorrect(string $username, string $password): bool
+{
+    $user = getUserByUsername($username);
+    $isUservalid = !empty($user);
+    
+    if ($isUservalid) {
+        $hashPassword = $user['password'];
+        $isPasswordValid = password_verify($password, $hashPassword);
+    }
+
+    if ($isPasswordValid) {
+        return true;
+    }
+
+    return false;
+}
+
+if (isset($_SESSION['user_id'])) {
+    redirect(RECORDLIST_PAGE);
+}
+
+$isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
+
+if ($isPost && isset($_POST['register'])) {
+    redirect(REGISTER_PAGE);
+}
+
+if ($isPost) {
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+
+    $errorData = getErrorData($username, $password);
+    $isCredentialCorrect = isCredentialCorrect($username, $password);
+
+    if (empty($errorData) && !$isCredentialCorrect) {
         $errorData['credentials'] = 'Invalid username or password';
+    }
+
+    if (empty($errorData)) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $username;
+
+        redirect(RECORDLIST_PAGE);
     }
 }
 

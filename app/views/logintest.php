@@ -49,7 +49,7 @@ function showError(array $errorData, string $field): void
             <button type="submit" name="login">Login</button>
         </form>
 
-        <a href="index.php?page=register">Register</a>
+        <a href="/register">Register</a>
     </main>
 </body>
 </html>

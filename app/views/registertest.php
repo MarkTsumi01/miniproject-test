@@ -43,7 +43,7 @@
             </div>
             <button type="submit" name="register">Register</button>
         </form>
-        <a href="index.php?page=login">Login</a>
+        <a href="/login">Login</a>
     </main>
 </body>
 

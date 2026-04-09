@@ -3,7 +3,7 @@
 // define('APP_RUNNING', true);
 
 $routes = [
-    'login' => '/app/controllers/LoginControllerTest.php',
+    'login' => '/app/controllers/LoginController.php',
     'register' => '/app/controllers/RegisterController.php',
     'recordlist' => '/app/controllers/RecordListController.php',
     'addrecord' => '/app/controllers/AddRecordController.php',
