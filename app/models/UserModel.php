@@ -1,38 +1,49 @@
 <?php
 
-function getUserByUserName(mysqli $connectDatabase, string $userName)
+// require __DIR__ . '/Database.php';
+require __DIR__ . '/Databasetest.php';
+
+function getUserByUsername(string $username): array
 {
-    $selectUserByUsername = '
+    $connectDatabase = getDatabase();
+
+    $sql = '
         SELECT 
             id, 
             password 
         FROM users 
         WHERE username = ?
     ';
-    
-    $statement = $connectDatabase->prepare($selectUserByUsername);
-    $statement->bind_param('s', $userName);
+       
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('s', $username);
     $statement->execute();
     $result = $statement->get_result()->fetch_assoc();
-    $statement->close();
-    
+    $statement->close(); 
+
+    if (empty($result)) {
+        return [];
+    }
+
     return $result;
 }
 
-function addUser(mysqli $connectDatabase, string $userName, string $hashedPassword): int
+function addUser(string $username, string $password): int
 {
-    $insertUser = '
+    $connectDatabase = getDatabase();
+
+    $sql = '
         INSERT INTO users 
             (username, password)
         VALUES 
             (?, ?)
     ';
     
-    $statement = $connectDatabase->prepare($insertUser);
-    $statement->bind_param('ss', $userName, $hashedPassword);
+    $statement = $connectDatabase->prepare($sql);
+    $statement->bind_param('ss', $username, $password);
     $statement->execute();
-    $newUserId = $connectDatabase->insert_id;
+    $newUserid = $connectDatabase->insert_id;
     $statement->close();
     
-    return $newUserId;
+    return $newUserid;
 }

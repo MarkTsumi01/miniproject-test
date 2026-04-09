@@ -2,59 +2,88 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/UserModel.php';
+require __DIR__ . '/../Models/UserModel.php';
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: index.php?page=recordlist');
-    
+const RECORDLIST_PAGE = 'index.php?page=recordlist';
+const LOGIN_PAGE = 'index.php?page=login';
+
+function redirect(string $url): void
+{
+    header('Location: ' . $url);
+
     exit();
 }
 
-$errorList = [];
+function getErrorMessage(string $username, string $password): array
+{
+    $errorMessage = [];
 
-$isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
-$isLogin = isset($_POST['login']);
-
-if ($isPostRequest) {
-    if ($isLogin) {
-        header('Location: index.php?page=login');
-        
-        exit();
+    if (empty($username)) {
+        $errorMessage['username'] = 'Username is required';
     }
 
-    $userName = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-
-    if (empty($userName)) {
-        $errorList['username'] = 'Username is required';
-    }
-
-    if (stripos($userName, ' ') !== false) {
-        $errorList['username'] = 'Username must not contain space';
+    if (stripos($username, ' ')) {
+        $errorMessage['username'] = 'Username must not contain space';
     }
 
     if (empty($password)) {
-        $errorList['password'] = 'Password is required';
+        $errorMessage['password'] = 'Password is required';
     }
 
-    if (empty($errorList)) {
-        $user = getUserByUserName($connectDatabase, $userName);
+    return $errorMessage;
+}
 
-        $isUserNotFound = ($user === null);
-        
-        if ($isUserNotFound) {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $newuserId = addUser($connectDatabase, $userName, $hashedPassword);
-            
-            $_SESSION['user_id'] = $newuserId;
-            $_SESSION['username'] = $userName;
-            session_write_close();
-            header('Location: index.php?page=recordlist');
-            
-            exit();
+function isUserNameExist(string $username): bool
+{
+    $user = getUserByUsername($username);
+
+    $result = (!empty($user));
+
+    return $result;
+}
+
+function register(string $username, string $password): int
+{
+    $isUsernameTaken = isUserNameExist($username);
+
+    if ($isUsernameTaken) {
+        return 0;
+    }
+
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $newUserid = addUser($username, $hashedPassword);
+
+    return $newUserid;
+}
+
+if (isset($_SESSION['user_id'])) {
+    redirect(RECORDLIST_PAGE);
+}
+
+$isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
+
+if ($isPost && isset($_POST['login'])) {
+    redirect(LOGIN_PAGE);
+}
+
+if ($isPost) {
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+
+    $errorData = getErrorData($username, $password);
+
+    if (empty($errorData)) {
+        $newUserid = register($username, $password);
+        $isRegisterSuccess = ($newUserid != 0);
+
+        if ($isRegisterSuccess) {
+            $_SESSION['user_id'] = $newUserid;
+            $_SESSION['username'] = $username;
+
+            redirect(RECORDLIST_PAGE);
         } else {
-            $errorList['username'] = 'Username is already exists';    
+            $errorData['username'] = 'Username already exists';
         }
     }
 }

@@ -5,13 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Record List</title>
 </head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="index.php?page=recordlist">Record List</a></li>
-        </ul>
-    </nav>
-
+<body> 
     <main>
         <h1>Record List</h1>
 

@@ -2,58 +2,87 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/UserModel.php';
+require __DIR__ . '/../Models/UserModel.php';
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: index.php?page=recordlist');
-    
+const RECORDLIST_PAGE = 'index.php?page=recordlist';
+const REGISTER_PAGE = 'index.php?page=register';
+
+function redirect(string $url): void
+{
+    header('Location: ' . $url);
+
     exit();
 }
 
-$errorList = [];
+function getErrorData(string $username, string $password): array
+{
+    $errorData = [];
 
-$isPostRequest = $_SERVER['REQUEST_METHOD'] === 'POST';
-$isRegister = isset($_POST['register']);
-
-if ($isPostRequest) {
-    if ($isRegister) {
-        header('Location: index.php?page=register');
-        
-        exit();
-    }
-
-    $userName = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-
-    if (empty($userName)) {
-        $errorList['username'] = 'Username is required';
-    }
-
-    if (stripos($userName, ' ') !== false) {
-        $errorList['username'] = 'Username must not contain space';
+    if (empty($username)) {
+        $errorData['username'] = 'Username is required';        
     }
 
     if (empty($password)) {
-        $errorList['password'] = 'Password is required';
+        $errorData['password'] = 'Password is required';
     }
 
-    if (empty($errorList)) {
-        $user = getUserByUserName($connectDatabase, $userName);
+    return $errorData;
+}
 
-        $isUserNotFound = ($user === null);
-        $isPasswordInvalid = !$isUserNotFound && !password_verify($password, $user['password']);
+function passwordVerify(string $password, string $hashPassword): bool
+{
+    $isPasswordvalid = password_verify($password, $hashPassword);
 
-        if ($isUserNotFound || $isPasswordInvalid) {
-            $errorList['credentials'] = 'Invalid username or password';
-        } else {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $userName;
-            session_write_close();
-            header('Location: index.php?page=recordlist');
-            
-            exit();
-        }
+    if ($isPasswordvalid) {
+        return true;
+    }
+
+    return false;
+}
+
+function isCredentialCorrect(string $username, string $password): bool
+{
+    $user = getUserByUsername($username);
+    $isUservalid = !empty($user);
+    
+    if ($isUservalid) {
+        $hashPassword = $user['password'];
+        $isPasswordValid = password_verify($password, $hashPassword);
+    }
+
+    if ($isPasswordValid) {
+        return true;
+    }
+
+    return false;
+}
+
+if (isset($_SESSION['user_id'])) {
+    redirect(RECORDLIST_PAGE);
+}
+
+$isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
+
+if ($isPost && isset($_POST['register'])) {
+    redirect(REGISTER_PAGE);
+}
+
+if ($isPost) {
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+
+    $errorData = getErrorData($username, $password);
+    $isCredentialCorrect = isCredentialCorrect($username, $password);
+
+    if (empty($errorData) && !$isCredentialCorrect) {
+        $errorData['credentials'] = 'Invalid username or password';
+    }
+
+    if (empty($errorData)) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $username;
+
+        redirect(RECORDLIST_PAGE);
     }
 }
 

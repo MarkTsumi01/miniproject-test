@@ -2,8 +2,8 @@
 
 session_start();
 
-require __DIR__ . '/../models/Database.php';
-require __DIR__ . '/../models/RecordModel.php';
+require __DIR__ . '/../Models/Database.php';
+require __DIR__ . '/../Models/RecordModel.php';
 
 if (!isset($_SESSION['user_id'])) {
     session_write_close();
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $recordId = (int) $_GET['record_id'];
-$record = getRecordById($connectDatabase, $recordId);
+$record = getRecordById($recordId);
 
 $errorList = [];
 
@@ -27,18 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if (empty($errorList)) {
         if ($recordName === $record['name']) {
-            updateRecord($connectDatabase, $recordName, $recordId);
+            updateRecord($recordName, $recordId);
             header('Location: index.php?page=recordlist');
             
             exit();
         }
         
-        $isRecordAlreadyExists = isRecordExists($connectDatabase, $recordName);
+        $isRecordAlreadyExists = isRecordExists($recordName);
        
         if ($isRecordAlreadyExists) {
            $errorList['record_name'] = 'This name already exists';
        } else {
-           updateRecord($connectDatabase, $recordName, $recordId);
+           updateRecord($recordName, $recordId);
            header('Location: index.php?page=recordlist');
            
            exit();

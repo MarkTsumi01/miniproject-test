@@ -27,6 +27,25 @@ function getAlbumsByBandId(mysqli $connectDatabase, int $bandId)
     return $result;
 }
 
+function getAlbumByAlbumName(mysqli $connectDatabase, string $albumName)
+{
+   $selectAlbumByAlbumName = '
+        SELECT 
+            id,
+            name
+        FROM albums
+        WHERE name = ?
+   '; 
+
+   $statement = $connectDatabase->prepare($selectAlbumByAlbumName);
+   $statement->bind_param('s', $albumName);
+   $statement->execute();
+   $result = $statement->get_result()->fetch_assoc();
+   $statement->close();
+
+   return $result;
+}
+
 function addAlbum(mysqli $connectDatabase, string $albumName, int $bandId): void
 {
     $addAlbumQuery = '

@@ -1,5 +1,16 @@
+<?php
+
+if (!defined('APP_RUNNING')) {
+    http_response_code(403);
+
+    die('Direct access is not allowed');
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +23,7 @@
         });
     </script>
 </head>
+
 <body>
     <main>
         <h1>Edit Record</h1>
@@ -33,4 +45,5 @@
         </form>
     </main>
 </body>
+
 </html>
