@@ -44,9 +44,9 @@ function isUserNameExist(string $username): bool
 
 function register(string $username, string $password): int
 {
-    $isUsernameTaken = isUserNameExist($username);
+    $isUsernameExist = isUserNameExist($username);
 
-    if ($isUsernameTaken) {
+    if ($isUsernameExist) {
         return 0;
     }
 
@@ -71,9 +71,9 @@ if ($isPost) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $errorData = getErrorData($username, $password);
+    $errorMessage = getErrorMessage($username, $password);
 
-    if (empty($errorData)) {
+    if (empty($errorMessage)) {
         $newUserid = register($username, $password);
         $isRegisterSuccess = ($newUserid != 0);
 
@@ -83,7 +83,7 @@ if ($isPost) {
 
             redirect(RECORDLIST_PAGE);
         } else {
-            $errorData['username'] = 'Username already exists';
+            $errorMessage['username'] = 'Username already exists';
         }
     }
 }

@@ -14,19 +14,19 @@ function redirect(string $url): void
     exit();
 }
 
-function getErrorData(string $username, string $password): array
+function getErrorMessage(string $username, string $password): array
 {
-    $errorData = [];
+    $errorMessage = [];
 
     if (empty($username)) {
-        $errorData['username'] = 'Username is required';        
+        $errorMessage['username'] = 'Username is required';        
     }
 
     if (empty($password)) {
-        $errorData['password'] = 'Password is required';
+        $errorMessage['password'] = 'Password is required';
     }
 
-    return $errorData;
+    return $errorMessage;
 }
 
 function passwordVerify(string $password, string $hashPassword): bool
@@ -71,14 +71,14 @@ if ($isPost) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $errorData = getErrorData($username, $password);
+    $errorMessage = getErrorMessage($username, $password);
     $isCredentialCorrect = isCredentialCorrect($username, $password);
 
-    if (empty($errorData) && !$isCredentialCorrect) {
+    if (empty($errorMessage) && !$isCredentialCorrect) {
         $errorData['credentials'] = 'Invalid username or password';
     }
 
-    if (empty($errorData)) {
+    if (empty($errorMessage)) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $username;
 
