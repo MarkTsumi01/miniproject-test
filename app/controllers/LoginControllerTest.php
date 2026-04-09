@@ -14,15 +14,7 @@ function redirect(string $url): void
     exit();
 }
 
-// function validateLoginInput(string $username, string $password): array
-// {
-//     return array_filter([
-//         'username' => $username ? null : 'Username is required',
-//         'password' => $password ? null : 'Password is required',
-//     ]);
-// }
-
-function validateLoginInput(string $username, string $password): array
+function getErrorData(string $username, string $password): array
 {
     $errorData = [];
 
@@ -57,19 +49,17 @@ if (isset($_SESSION['user_id'])) {
     redirect(RECORDLIST_PAGE);
 }
 
-$isPost = $_SERVER['REQUEST_METHOD'] === 'POST';
+$isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
 
 if ($isPost && isset($_POST['register'])) {
     redirect(REGISTER_PAGE);
 }
 
-$errorData = [];
-
 if ($isPost) {
-    $username  = trim($_POST['username'] ?? '');
-    $password  = $_POST['password'] ?? '';
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
 
-    $errorData = validateLoginInput($username, $password);
+    $errorData = getErrorData($username, $password);
 
     if (empty($errorData) && !handleLogin($username, $password)) {
         $errorData['credentials'] = 'Invalid username or password';

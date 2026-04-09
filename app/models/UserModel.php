@@ -1,10 +1,11 @@
 <?php
 
-require __DIR__ . '/Database.php';
+// require __DIR__ . '/Database.php';
+require __DIR__ . '/Databasetest.php';
 
 function getUserByUsername(string $username): array
 {
-    global $connectDatabase;
+    $connectDatabase = getDatabase();
 
     $sql = '
         SELECT 
@@ -27,9 +28,9 @@ function getUserByUsername(string $username): array
     return $result;
 }
 
-function addUser(string $username, string $hashedpassword): int
+function addUser(string $username, string $password): int
 {
-    global $connectDatabase;
+    $connectDatabase = getDatabase();
 
     $sql = '
         INSERT INTO users 
@@ -39,7 +40,7 @@ function addUser(string $username, string $hashedpassword): int
     ';
     
     $statement = $connectDatabase->prepare($sql);
-    $statement->bind_param('ss', $username, $hashedpassword);
+    $statement->bind_param('ss', $username, $password);
     $statement->execute();
     $newUserid = $connectDatabase->insert_id;
     $statement->close();

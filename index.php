@@ -1,15 +1,15 @@
 <?php
 
-define('APP_RUNNING', true);
+// define('APP_RUNNING', true);
 
 $routes = [
-    'login'      => '/app/controllers/LoginControllerTest.php',
-    'register'   => '/app/controllers/RegisterControllerTest.php',
+    'login' => '/app/controllers/LoginControllerTest.php',
+    'register' => '/app/controllers/RegisterController.php',
     'recordlist' => '/app/controllers/RecordListController.php',
-    'addrecord'  => '/app/controllers/AddRecordController.php',
+    'addrecord' => '/app/controllers/AddRecordController.php',
     'editrecord' => '/app/controllers/EditRecordController.php',
-    'bandlist'   => '/app/controllers/BandListController.php',
-    'addband'    => '/app/controllers/AddBandController.php',
+    'bandlist' => '/app/controllers/BandListController.php',
+    'addband' => '/app/controllers/AddBandController.php',
     'editband' => '/app/controllers/EditBandController.php',
     'albumlist' => '/app/controllers/AlbumListController.php'
 ];

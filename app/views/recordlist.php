@@ -1,13 +1,3 @@
-<?php
-
-if (!defined('APP_RUNNING')) {
-    http_response_code(403);
-    
-    die('Direct access is not allowed');
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
