@@ -63,10 +63,6 @@ if (isset($_SESSION['user_id'])) {
 
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
 
-if ($isPost && isset($_POST['login'])) {
-    redirect(LOGIN_PAGE);
-}
-
 if ($isPost) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];

@@ -29,17 +29,6 @@ function getErrorMessage(string $username, string $password): array
     return $errorMessage;
 }
 
-function passwordVerify(string $password, string $hashPassword): bool
-{
-    $isPasswordvalid = password_verify($password, $hashPassword);
-
-    if ($isPasswordvalid) {
-        return true;
-    }
-
-    return false;
-}
-
 function isCredentialCorrect(string $username, string $password): bool
 {
     $user = getUserByUsername($username);
