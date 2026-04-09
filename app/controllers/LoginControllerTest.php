@@ -29,20 +29,32 @@ function getErrorData(string $username, string $password): array
     return $errorData;
 }
 
-function handleLogin(string $username, string $password): bool
+function passwordVerify(string $password, string $hashPassword): bool
 {
-    $user = getUserByUsername($username);
-    $isUserInvalid = empty($user);
-    $isPasswordInvalid = !password_verify($password, $user['password']);
+    $isPasswordvalid = password_verify($password, $hashPassword);
 
-    if ($isUserInvalid || $isPasswordInvalid) {
-        return false;
+    if ($isPasswordvalid) {
+        return true;
     }
 
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['username'] = $username;
+    return false;
+}
 
-    return true;
+function isCredentialCorrect(string $username, string $password): bool
+{
+    $user = getUserByUsername($username);
+    $isUservalid = !empty($user);
+    
+    if ($isUservalid) {
+        $hashPassword = $user['password'];
+        $isPasswordValid = password_verify($password, $hashPassword);
+    }
+
+    if ($isPasswordValid) {
+        return true;
+    }
+
+    return false;
 }
 
 if (isset($_SESSION['user_id'])) {
@@ -60,12 +72,16 @@ if ($isPost) {
     $password = $_POST['password'];
 
     $errorData = getErrorData($username, $password);
+    $isCredentialCorrect = isCredentialCorrect($username, $password);
 
-    if (empty($errorData) && !handleLogin($username, $password)) {
+    if (empty($errorData) && !$isCredentialCorrect) {
         $errorData['credentials'] = 'Invalid username or password';
     }
 
     if (empty($errorData)) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $username;
+
         redirect(RECORDLIST_PAGE);
     }
 }

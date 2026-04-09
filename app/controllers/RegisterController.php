@@ -14,50 +14,43 @@ function redirect(string $url): void
     exit();
 }
 
-function getErrorData(string $username, string $password): array
+function getErrorMessage(string $username, string $password): array
 {
-    $errorData = [];
+    $errorMessage = [];
 
     if (empty($username)) {
-        $errorData['username'] = 'Username is required';
+        $errorMessage['username'] = 'Username is required';
     }
 
     if (stripos($username, ' ')) {
-        $errorData['username'] = 'Username must not contain space';
+        $errorMessage['username'] = 'Username must not contain space';
     }
 
     if (empty($password)) {
-        $errorData['password'] = 'Password is required';
+        $errorMessage['password'] = 'Password is required';
     }
 
-    return $errorData;
+    return $errorMessage;
 }
 
-function isUserNameTaken(string $username): bool
+function isUserNameExist(string $username): bool
 {
     $user = getUserByUsername($username);
 
-    $result = (!empty($user)) ? true : false;
+    $result = (!empty($user));
 
     return $result;
 }
 
-function getHashedPassword(string $password): string
+function register(string $username, string $password): int
 {
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    return $hashedPassword;
-}
-
-function getNewUserid(string $username, string $password): int
-{
-    $isUsernameTaken = isUserNameTaken($username);
+    $isUsernameTaken = isUserNameExist($username);
 
     if ($isUsernameTaken) {
         return 0;
     }
 
-    $hashedPassword = getHashedPassword($password);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $newUserid = addUser($username, $hashedPassword);
 
@@ -81,10 +74,10 @@ if ($isPost) {
     $errorData = getErrorData($username, $password);
 
     if (empty($errorData)) {
-        $newUserid = getNewUserid($username, $password);
-        $isRegister = ($newUserid != 0);
+        $newUserid = register($username, $password);
+        $isRegisterSuccess = ($newUserid != 0);
 
-        if ($isRegister) {
+        if ($isRegisterSuccess) {
             $_SESSION['user_id'] = $newUserid;
             $_SESSION['username'] = $username;
 
