@@ -17,13 +17,6 @@ if (isset($_SESSION['user_id'])) {
     redirect(RECORDLIST_PAGE_PATH);
 }
 
-function register(string $username, string $hashedPassword): int
-{
-    $newUserId = addUser($username, $hashedPassword);
-
-    return $newUserId;
-}
-
 function getErrorMessage(string $username, string $password): array
 {
     $errorMessage = [];
@@ -59,7 +52,7 @@ if ($isPost) {
 
     if (empty($errorMessage)) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $newUserId = register($username, $hashedPassword);
+        $newUserId = addUser($username, $hashedPassword);
 
         $_SESSION['user_id'] = $newUserId;
         $_SESSION['password'] = $username;
