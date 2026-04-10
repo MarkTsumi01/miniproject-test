@@ -4,8 +4,7 @@ session_start();
 
 require __DIR__ . '/../Models/UserModel.php';
 
-const RECORDLIST_PAGE = 'index.php?page=recordlist';
-const REGISTER_PAGE = 'index.php?page=register';
+const RECORDLIST_PAGE_PATH = 'index.php?page=recordlist';
 
 function redirect(string $url): void
 {
@@ -29,10 +28,10 @@ function getErrorMessage(string $username, string $password): array
     return $errorMessage;
 }
 
-function isCredentialCorrect(string $username, string $password): bool
+function isCredentialValid(string $username, string $password): bool
 {
     $user = getUserByUsername($username);
-    $isUservalid = !empty($user);
+    $isUservalid = (!empty($user));
     
     if ($isUservalid) {
         $hashPassword = $user['password'];
@@ -47,23 +46,19 @@ function isCredentialCorrect(string $username, string $password): bool
 }
 
 if (isset($_SESSION['user_id'])) {
-    redirect(RECORDLIST_PAGE);
+    redirect(RECORDLIST_PAGE_PATH);
 }
 
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
-
-if ($isPost && isset($_POST['register'])) {
-    redirect(REGISTER_PAGE);
-}
 
 if ($isPost) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
     $errorMessage = getErrorMessage($username, $password);
-    $isCredentialCorrect = isCredentialCorrect($username, $password);
+    $isCredentialValid = isCredentialValid($username, $password);
 
-    if (empty($errorMessage) && !$isCredentialCorrect) {
+    if (!$isCredentialValid) {
         $errorData['credentials'] = 'Invalid username or password';
     }
 
@@ -71,7 +66,7 @@ if ($isPost) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $username;
 
-        redirect(RECORDLIST_PAGE);
+        redirect(RECORDLIST_PAGE_PATH);
     }
 }
 

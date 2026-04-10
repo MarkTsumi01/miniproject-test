@@ -4,9 +4,9 @@ require __DIR__ . '/Database.php';
 
 function getRecordsWithBandCount(): mysqli_result
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
-    $sql= '
+    $sql = '
         SELECT 
             records.id, 
             records.name, 
@@ -21,7 +21,7 @@ function getRecordsWithBandCount(): mysqli_result
             records.name ASC
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->execute();
     $result = $statement->get_result();
     $statement->close();
@@ -31,7 +31,7 @@ function getRecordsWithBandCount(): mysqli_result
 
 function getRecordById(int $recordid): array
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         SELECT 
@@ -41,7 +41,7 @@ function getRecordById(int $recordid): array
         WHERE id = ?
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('i', $recordid);
     $statement->execute();
     $record = $statement->get_result()->fetch_assoc();
@@ -52,7 +52,7 @@ function getRecordById(int $recordid): array
 
 function getRecordIdByName(string $recordname): array
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         SELECT 
@@ -61,7 +61,7 @@ function getRecordIdByName(string $recordname): array
         WHERE name = ?
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('s', $recordname);
     $statement->execute();
     $statement->bind_result($recordId);
@@ -73,7 +73,7 @@ function getRecordIdByName(string $recordname): array
 
 function isRecordExists(string $recordname): bool
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         SELECT 
@@ -82,7 +82,7 @@ function isRecordExists(string $recordname): bool
         WHERE name = ?
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('s', $recordname);
     $statement->execute();
     $statement->store_result();
@@ -94,7 +94,7 @@ function isRecordExists(string $recordname): bool
 
 function addRecord(string $recordname): void
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         INSERT INTO records 
@@ -103,7 +103,7 @@ function addRecord(string $recordname): void
             (?)
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('s', $recordname);
     $statement->execute();
     $statement->close();
@@ -111,7 +111,7 @@ function addRecord(string $recordname): void
 
 function updateRecord(string $recordname, int $recordid): void
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         UPDATE records
@@ -120,7 +120,7 @@ function updateRecord(string $recordname, int $recordid): void
         WHERE id = ?
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('si', $recordname, $recordid);
     $statement->execute();
     $statement->close();
@@ -128,14 +128,14 @@ function updateRecord(string $recordname, int $recordid): void
 
 function deleteRecord(int $recordid): void
 {
-    global $connectDatabase;
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         DELETE FROM records 
         WHERE id = ?
     ';
 
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('i', $recordid);
     $statement->execute();
     $statement->close();

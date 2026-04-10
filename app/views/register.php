@@ -24,7 +24,7 @@
             <br>
     
             <?php if (!empty($errorMessage['username'])): ?>
-            <?= '<p>' . htmlspecialchars($errorMessage['username']) . '</p>' ?>
+                <?= '<p>' . htmlspecialchars($errorMessage['username']) . '</p>' ?>
             <?php endif; ?>
 
             <label for="password">Password:</label>
@@ -35,7 +35,7 @@
             <br>
 
             <?php if (!empty($errorMessage['password'])): ?>
-            <?= '<p>' . htmlspecialchars($errorMessage['password']) . '</p>' ?>
+                <?= '<p>' . htmlspecialchars($errorMessage['password']) . '</p>' ?>
             <?php endif; ?>
 
             <button type="submit" name="register">Register</button>

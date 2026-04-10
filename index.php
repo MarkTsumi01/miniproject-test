@@ -1,10 +1,8 @@
 <?php
 
-// define('APP_RUNNING', true);
-
 $routes = [
     'login' => '/app/controllers/LoginController.php',
-    'register' => '/app/controllers/RegisterController.php',
+    'register' => '/app/controllers/RegisterControllerRefactor.php',
     'recordlist' => '/app/controllers/RecordListController.php',
     'addrecord' => '/app/controllers/AddRecordController.php',
     'editrecord' => '/app/controllers/EditRecordController.php',

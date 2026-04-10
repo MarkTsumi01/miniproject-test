@@ -1,11 +1,10 @@
 <?php
 
-// require __DIR__ . '/Database.php';
-require __DIR__ . '/Databasetest.php';
+require __DIR__ . '/Database.php';
 
 function getUserByUsername(string $username): array
 {
-    $connectDatabase = getDatabase();
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         SELECT 
@@ -15,7 +14,7 @@ function getUserByUsername(string $username): array
         WHERE username = ?
     ';
        
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('s', $username);
     $statement->execute();
     $result = $statement->get_result()->fetch_assoc();
@@ -30,7 +29,7 @@ function getUserByUsername(string $username): array
 
 function addUser(string $username, string $password): int
 {
-    $connectDatabase = getDatabase();
+    $databaseConnection = getDatabaseConnection();
 
     $sql = '
         INSERT INTO users 
@@ -39,10 +38,10 @@ function addUser(string $username, string $password): int
             (?, ?)
     ';
     
-    $statement = $connectDatabase->prepare($sql);
+    $statement = $databaseConnection->prepare($sql);
     $statement->bind_param('ss', $username, $password);
     $statement->execute();
-    $newUserid = $connectDatabase->insert_id;
+    $newUserid = $databaseConnection->insert_id;
     $statement->close();
     
     return $newUserid;
