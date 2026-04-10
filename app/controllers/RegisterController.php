@@ -4,14 +4,17 @@ session_start();
 
 require __DIR__ . '/../Models/UserModel.php';
 
-const RECORDLIST_PAGE = 'index.php?page=recordlist';
-const LOGIN_PAGE = 'index.php?page=login';
+const RECORDLIST_PAGE_PATH = 'index.php?page=recordlist';
 
 function redirect(string $url): void
 {
     header('Location: ' . $url);
 
     exit();
+}
+
+if (isset($_SESSION['user_id'])) {
+    redirect(RECORDLIST_PAGE_PATH);
 }
 
 function getErrorMessage(string $username, string $password): array
@@ -26,6 +29,12 @@ function getErrorMessage(string $username, string $password): array
         $errorMessage['username'] = 'Username must not contain space';
     }
 
+    $user = getUserByUsername($username);
+
+    if (!empty($user)) {
+        $errorMessage['username'] = 'Username already exists';
+    }
+
     if (empty($password)) {
         $errorMessage['password'] = 'Password is required';
     }
@@ -33,58 +42,22 @@ function getErrorMessage(string $username, string $password): array
     return $errorMessage;
 }
 
-function isUserNameExist(string $username): bool
-{
-    $user = getUserByUsername($username);
-
-    $result = (!empty($user));
-
-    return $result;
-}
-
-function register(string $username, string $password): int
-{
-    $isUsernameTaken = isUserNameExist($username);
-
-    if ($isUsernameTaken) {
-        return 0;
-    }
-
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    $newUserid = addUser($username, $hashedPassword);
-
-    return $newUserid;
-}
-
-if (isset($_SESSION['user_id'])) {
-    redirect(RECORDLIST_PAGE);
-}
-
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
-
-if ($isPost && isset($_POST['login'])) {
-    redirect(LOGIN_PAGE);
-}
 
 if ($isPost) {
     $username = trim($_POST['username']);
-    $password = $_POST['password'];
+    $password = ($_POST['password']);
 
-    $errorData = getErrorData($username, $password);
+    $errorMessage = getErrorMessage($username, $password);
 
-    if (empty($errorData)) {
-        $newUserid = register($username, $password);
-        $isRegisterSuccess = ($newUserid != 0);
+    if (empty($errorMessage)) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $newUserId = addUser($username, $hashedPassword);
 
-        if ($isRegisterSuccess) {
-            $_SESSION['user_id'] = $newUserid;
-            $_SESSION['username'] = $username;
+        $_SESSION['user_id'] = $newUserId;
+        $_SESSION['password'] = $username;
 
-            redirect(RECORDLIST_PAGE);
-        } else {
-            $errorData['username'] = 'Username already exists';
-        }
+        redirect(RECORDLIST_PAGE_PATH);
     }
 }
 

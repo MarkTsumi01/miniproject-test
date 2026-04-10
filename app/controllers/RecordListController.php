@@ -38,6 +38,6 @@ if ($isPostRequest && $isLogout) {
     redirect(LOGIN_PAGE);
 }
 
-$recordsResult = getRecordsWithBandCount($connectDatabase);
+$recordsResult = getRecords($connectDatabase);
 
 require __DIR__ . '/../views/recordlist.php';

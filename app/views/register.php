@@ -23,8 +23,8 @@
                 value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
             <br>
     
-            <?php if (!empty($errorData['username'])): ?>
-            <?= '<p>' . htmlspecialchars($errorData['username']) . '</p>' ?>
+            <?php if (!empty($errorMessage['username'])): ?>
+                <?= '<p>' . htmlspecialchars($errorMessage['username']) . '</p>' ?>
             <?php endif; ?>
 
             <label for="password">Password:</label>
@@ -34,8 +34,8 @@
                 name="password">
             <br>
 
-            <?php if (!empty($errorData['password'])): ?>
-            <?= '<p>' . htmlspecialchars($errorData['password']) . '</p>' ?>
+            <?php if (!empty($errorMessage['password'])): ?>
+                <?= '<p>' . htmlspecialchars($errorMessage['password']) . '</p>' ?>
             <?php endif; ?>
 
             <button type="submit" name="register">Register</button>
