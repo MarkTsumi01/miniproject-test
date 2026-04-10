@@ -34,10 +34,10 @@ function getErrorMessage(string $username, string $password): array
 
         if (!empty($user)) {
             $hashedPassword = $user['password'];
-            $isPasswordInvalid = password_verify($password, $hashedPassword);
+            $isPasswordValid = password_verify($password, $hashedPassword);
         }
 
-        if (!$isPasswordInvalid) {
+        if (!$isPasswordValid) {
             $errorMessage['credentials'] = 'Invalid username or password';
         }
     }
