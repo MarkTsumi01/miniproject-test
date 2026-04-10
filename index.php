@@ -1,8 +1,8 @@
 <?php
 
 $routes = [
+    'register' => '/app/controllers/RegisterController.php',
     'login' => '/app/controllers/LoginController.php',
-    'register' => '/app/controllers/RegisterControllerRefactor.php',
     'recordlist' => '/app/controllers/RecordListController.php',
     'addrecord' => '/app/controllers/AddRecordController.php',
     'editrecord' => '/app/controllers/EditRecordController.php',

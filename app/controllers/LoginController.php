@@ -6,11 +6,15 @@ require __DIR__ . '/../Models/UserModel.php';
 
 const RECORDLIST_PAGE_PATH = 'index.php?page=recordlist';
 
-function redirect(string $url): void
+function redirect($url): void
 {
     header('Location: ' . $url);
 
     exit();
+}
+
+if (isset($_SESSION['user_id'])) {
+    redirect(RECORDLIST_PAGE_PATH);
 }
 
 function getErrorMessage(string $username, string $password): array
@@ -18,35 +22,27 @@ function getErrorMessage(string $username, string $password): array
     $errorMessage = [];
 
     if (empty($username)) {
-        $errorMessage['username'] = 'Username is required';        
+        $errorMessage['username'] = 'Username is required';
     }
 
     if (empty($password)) {
         $errorMessage['password'] = 'Password is required';
     }
 
+    if (empty($errorMessage)) {
+        $user = getUserByUsername($username);
+
+        if (!empty($user)) {
+            $hashedPassword = $user['password'];
+            $isPasswordInvalid = password_verify($password, $hashedPassword);
+        }
+
+        if (!$isPasswordInvalid) {
+            $errorMessage['credentials'] = 'Invalid username or password';
+        }
+    }
+
     return $errorMessage;
-}
-
-function isCredentialValid(string $username, string $password): bool
-{
-    $user = getUserByUsername($username);
-    $isUservalid = (!empty($user));
-    
-    if ($isUservalid) {
-        $hashPassword = $user['password'];
-        $isPasswordValid = password_verify($password, $hashPassword);
-    }
-
-    if ($isPasswordValid) {
-        return true;
-    }
-
-    return false;
-}
-
-if (isset($_SESSION['user_id'])) {
-    redirect(RECORDLIST_PAGE_PATH);
 }
 
 $isPost = ($_SERVER['REQUEST_METHOD'] === 'POST');
@@ -56,14 +52,12 @@ if ($isPost) {
     $password = $_POST['password'];
 
     $errorMessage = getErrorMessage($username, $password);
-    $isCredentialValid = isCredentialValid($username, $password);
-
-    if (!$isCredentialValid) {
-        $errorData['credentials'] = 'Invalid username or password';
-    }
 
     if (empty($errorMessage)) {
-        $_SESSION['user_id'] = $user['id'];
+        $user = getUserByUsername($username);
+        $userId = $user['id'];
+
+        $_SESSION['user_id'] = $userId;
         $_SESSION['username'] = $username;
 
         redirect(RECORDLIST_PAGE_PATH);
