@@ -2,7 +2,7 @@
 
 require __DIR__ . '/Database.php';
 
-function getRecordsWithBandCount(): mysqli_result
+function getRecords(): mysqli_result
 {
     $databaseConnection = getDatabaseConnection();
 

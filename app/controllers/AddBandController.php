@@ -41,7 +41,7 @@ if ($isPostRequest) {
     }
 }
 
-$recordResult = getRecordsWithBandCount($connectDatabase);
+$recordResult = getRecords($connectDatabase);
 
 session_write_close();
 
